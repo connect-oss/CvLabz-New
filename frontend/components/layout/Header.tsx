@@ -28,19 +28,19 @@ const Header = () => {
               <span>Tools</span> <ChevronDown size={16} />
             </button>
             <a
-              href="#"
+              href="/#templates"
               className="font-bold text-gray-600 hover:text-blue-600 transition-colors"
             >
               Templates
             </a>
             <a
-              href="#"
+              href="/#learning"
               className="font-bold text-gray-600 hover:text-blue-600 transition-colors"
             >
               Learning Hub
             </a>
             <a
-              href="#"
+              href="/#pricing"
               className="font-bold text-gray-600 hover:text-blue-600 transition-colors"
             >
               Pricing
@@ -74,16 +74,16 @@ const Header = () => {
             exit={{ opacity: 0, height: 0 }}
             className="lg:hidden bg-white border-t border-gray-100 px-4 py-6 space-y-4"
           >
-            <a href="#" className="block font-bold text-lg text-gray-800">
+            <a href="/#tools" className="block font-bold text-lg text-gray-800">
               Tools
             </a>
-            <a href="#" className="block font-bold text-lg text-gray-800">
+            <a href="/#templates" className="block font-bold text-lg text-gray-800">
               Templates
             </a>
-            <a href="#" className="block font-bold text-lg text-gray-800">
+            <a href="/#learning" className="block font-bold text-lg text-gray-800">
               Learning Hub
             </a>
-            <a href="#" className="block font-bold text-lg text-gray-800">
+            <a href="/#pricing" className="block font-bold text-lg text-gray-800">
               Pricing
             </a>
             <hr className="border-gray-100" />

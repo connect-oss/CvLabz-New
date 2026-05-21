@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import LegalPage from "@/components/layout/LegalPage";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — CV Labz",
+  title: "Privacy Policy",
   description:
     "Learn how CV Labz collects, uses, and protects your personal data. GDPR-compliant privacy practices for our CV builder and career tools.",
+  alternates: { canonical: "/privacy-policy" },
 };
 
 export default function PrivacyPolicy() {

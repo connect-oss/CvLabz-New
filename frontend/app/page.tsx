@@ -15,11 +15,13 @@ export default function Home() {
     <div className="min-h-screen bg-white selection:bg-blue-100 selection:text-blue-900 overflow-x-hidden pt-20">
       <Header />
       <HeroSection />
-      <TemplatesSection />
+      <div id="templates">
+        <TemplatesSection />
+      </div>
       <LogoBar />
 
       {/* LinkedIn Analyzer + CV Matcher shared section */}
-      <section className="py-28 bg-gray-50/50">
+      <section id="tools" className="py-28 bg-gray-50/50">
         <div
           className="max-w-7xl mx-auto px-4 flex flex-col"
           style={{ gap: '40px' }}
@@ -43,9 +45,13 @@ export default function Home() {
       </section>
 
       <ToolsGrid />
-      <LearningHub />
+      <div id="learning">
+        <LearningHub />
+      </div>
       <RealResultsWall />
-      <PricingSection />
+      <div id="pricing">
+        <PricingSection />
+      </div>
       <Footer />
     </div>
   );

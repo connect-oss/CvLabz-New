@@ -38,12 +38,12 @@ export default function CVMatcherSection() {
             </div>
 
             {/* Heading */}
-            <h2 className="text-3xl lg:text-4xl font-extrabold text-gray-900 leading-tight" style={{
+            <h3 className="text-3xl lg:text-4xl font-extrabold text-gray-900 leading-tight" style={{
               fontFamily: "'Bricolage Grotesque', sans-serif",
               fontWeight: 800
             }}>
               Your CV does not match the job. Here is the gap.
-            </h2>
+            </h3>
 
             {/* Sub-copy */}
             <p className="text-gray-500 font-medium leading-relaxed">

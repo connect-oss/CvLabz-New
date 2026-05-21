@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import LegalPage from "@/components/layout/LegalPage";
 
 export const metadata: Metadata = {
-  title: "Cookie Policy — CV Labz",
+  title: "Cookie Policy",
   description:
     "Learn about the cookies CV Labz uses, including functional, analytical, and marketing cookies, and how to manage your preferences.",
+  alternates: { canonical: "/cookie-policy" },
 };
 
 export default function CookiePolicy() {

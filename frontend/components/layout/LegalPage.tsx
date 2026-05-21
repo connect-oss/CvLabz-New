@@ -13,7 +13,7 @@ export default function LegalPage({
   return (
     <div className="min-h-screen bg-white overflow-x-hidden pt-20">
       <Header />
-      <main className="max-w-3xl mx-auto px-4 py-16 md:py-24">
+      <main className="max-w-5xl mx-auto px-4 py-16 md:py-24">
         <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-3 tracking-tight">
           {title}
         </h1>

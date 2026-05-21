@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import LegalPage from "@/components/layout/LegalPage";
 
 export const metadata: Metadata = {
-  title: "Terms of Service — CV Labz",
+  title: "Terms of Service",
   description:
     "Read the Terms of Service for CV Labz. Learn about eligibility, subscriptions, AI-generated content, GDPR compliance, and more.",
+  alternates: { canonical: "/tos" },
 };
 
 export default function TermsOfService() {
