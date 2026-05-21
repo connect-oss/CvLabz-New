@@ -78,7 +78,7 @@ export default function Footer() {
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <a href="/linkedin-analyzer" className="hover:text-white transition-colors">
                     LinkedIn Analyzer
                   </a>
                 </li>
