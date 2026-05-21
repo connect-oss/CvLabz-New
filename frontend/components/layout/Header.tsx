@@ -49,9 +49,9 @@ const Header = () => {
         </div>
 
         <div className="hidden lg:flex items-center gap-3">
-          <button className="h-10 flex items-center px-4 text-sm font-bold text-gray-600 hover:text-gray-900 transition-colors bg-transparent">
+          <a href="/login" className="h-10 flex items-center px-4 text-sm font-bold text-gray-600 hover:text-gray-900 transition-colors bg-transparent">
             Login
-          </button>
+          </a>
           <button className="h-10 flex items-center px-6 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-full font-bold hover:opacity-90 transition-all shadow-md shadow-purple-200 active:scale-95">
             Create new Resume
           </button>
@@ -87,9 +87,9 @@ const Header = () => {
               Pricing
             </a>
             <hr className="border-gray-100" />
-            <button className="w-full text-left font-bold text-lg py-2 text-gray-600">
+            <a href="/login" className="block w-full text-left font-bold text-lg py-2 text-gray-600">
               Login
-            </button>
+            </a>
             <button className="w-full py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-full font-bold">
               Create new Resume
             </button>

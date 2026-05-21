@@ -8,6 +8,15 @@ const nextConfig: NextConfig = {
     ],
     unoptimized: true,
   },
+  async redirects() {
+    return [
+      {
+        source: '/Auth',
+        destination: '/login',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
