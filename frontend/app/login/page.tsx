@@ -3,32 +3,23 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, Lock, Eye, EyeOff, ArrowRight, Check } from "lucide-react";
 import Link from "next/link";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex flex-col pt-20">
+      <Header />
+      <div className="flex-1 flex">
       {/* Left panel — branding */}
-      <div className="hidden lg:flex lg:w-[45%] relative bg-gray-900 flex-col justify-between p-12 overflow-hidden">
+      <div className="hidden lg:flex lg:w-[45%] relative bg-gray-900 flex-col justify-center gap-10 p-12 overflow-hidden">
         {/* Background gradient blobs */}
         <div className="absolute top-0 left-0 w-full h-full">
           <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] rounded-full bg-purple-600/20 blur-[120px]" />
           <div className="absolute bottom-[-20%] right-[-10%] w-[400px] h-[400px] rounded-full bg-blue-600/20 blur-[120px]" />
-        </div>
-
-        {/* Logo */}
-        <div className="relative z-10">
-          <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center relative overflow-hidden shadow-sm">
-              <div className="w-5 h-5 border-2 border-white rounded-full flex items-center justify-center">
-                <div className="w-2 h-2 bg-white rounded-full" />
-              </div>
-              <div className="absolute bottom-1 w-6 h-3 border-2 border-white rounded-t-full border-b-0" />
-            </div>
-            <span className="text-xl font-black text-white">CV Labz</span>
-          </Link>
         </div>
 
         {/* Center content */}
@@ -91,19 +82,6 @@ export default function LoginPage() {
           transition={{ duration: 0.4 }}
           className="w-full max-w-md"
         >
-          {/* Mobile logo */}
-          <div className="lg:hidden flex items-center justify-center gap-2.5 mb-10">
-            <Link href="/" className="flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center relative overflow-hidden shadow-sm">
-                <div className="w-5 h-5 border-2 border-white rounded-full flex items-center justify-center">
-                  <div className="w-2 h-2 bg-white rounded-full" />
-                </div>
-                <div className="absolute bottom-1 w-6 h-3 border-2 border-white rounded-t-full border-b-0" />
-              </div>
-              <span className="text-xl font-black text-gray-900">CV Labz</span>
-            </Link>
-          </div>
-
           {/* Toggle */}
           <div className="flex items-center bg-white rounded-xl p-1 border border-gray-200 mb-8 shadow-sm">
             <button
@@ -274,6 +252,8 @@ export default function LoginPage() {
           </p>
         </motion.div>
       </div>
+      </div>
+      <Footer />
     </div>
   );
 }
