@@ -58,7 +58,7 @@ export default function Footer() {
               </h5>
               <ul className="space-y-3 text-sm font-bold text-gray-400">
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <a href="/cv-builder" className="hover:text-white transition-colors">
                     CV Builder
                   </a>
                 </li>
