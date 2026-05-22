@@ -37,14 +37,14 @@ export default function HeroSection() {
           </h1>
 
           <p
-            className="text-sm md:text-base text-gray-700 font-medium max-w-xl leading-relaxed mb-2"
+            className="text-sm md:text-base text-gray-700 font-medium max-w-xl leading-relaxed mb-6"
             style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}
           >
             CV Labz builds your CV, scores your LinkedIn, matches you to any
             vacancy, and writes your cover letter. All in one place.
           </p>
 
-          <p className="text-sm md:text-base font-bold text-gray-900 mb-1">
+          <p className="text-sm md:text-base font-bold text-gray-900 mb-3">
             <span
               className="font-extrabold"
               style={{
@@ -59,7 +59,7 @@ export default function HeroSection() {
             <span> unlocks everything for 14 days. Cancel in one click.</span>
           </p>
 
-          <p className="text-xs text-gray-400 mb-4">
+          <p className="text-xs text-gray-400 mb-6">
             After that &euro;19,99/month. No emails, no friction.
           </p>
 
