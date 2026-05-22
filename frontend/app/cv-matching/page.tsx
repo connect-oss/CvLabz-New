@@ -5,12 +5,11 @@ import Footer from "@/components/layout/Footer";
 import { motion } from "framer-motion";
 import {
   FileText,
-  PenLine,
+  Search,
   Target,
   Download,
   Check,
   Zap,
-  Smartphone,
   Clock,
   Star,
   MessageSquare,
@@ -18,7 +17,7 @@ import {
   DollarSign,
   Linkedin,
   Briefcase,
-  Building2,
+  PenLine,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -36,63 +35,63 @@ const steps = [
   {
     icon: FileText,
     step: 1,
-    title: "Choose a Professional Template",
+    title: "Upload Your CV",
     description:
-      "Start with a clean, ATS-optimized template designed to meet modern recruiter and hiring system standards.",
+      "Upload your existing CV or paste your text. Our system parses your skills, experience, and qualifications automatically.",
   },
   {
-    icon: PenLine,
+    icon: Search,
     step: 2,
-    title: "Add Your Details with Guided Support",
+    title: "Paste the Job Description",
     description:
-      "Enter your information with smart prompts, examples, and suggestions that help you write each section clearly and confidently.",
+      "Copy and paste any job posting URL or description. The AI extracts key requirements, responsibilities, and must-have skills.",
   },
   {
     icon: Target,
     step: 3,
-    title: "Customize for the Role You're Applying For",
+    title: "Get Your Match Score",
     description:
-      "Tailor your CV using role-specific recommendations and keyword alignment to match job descriptions and ATS requirements.",
+      "Receive an instant match percentage with a detailed breakdown of keyword alignment, experience fit, and section-by-section analysis.",
   },
   {
     icon: Download,
     step: 4,
-    title: "Download a Job-Ready CV",
+    title: "Improve and Reapply",
     description:
-      "Download your CV as a professionally formatted PDF, ready to upload or share with employers.",
+      "Follow prioritized suggestions to fill gaps, add missing keywords, and strengthen weak sections before submitting your application.",
   },
 ];
 
 const features = [
   {
     icon: Check,
-    title: "ATS-Optimized by Design",
+    title: "Instant Match Scoring",
     description:
-      "Our CV templates are designed to work smoothly with applicant tracking systems, helping your resume stay readable and properly structured during screening.",
+      "Get a percentage match score within seconds, showing exactly how your CV aligns with the job requirements across all key dimensions.",
   },
   {
     icon: Zap,
-    title: "Easy Editing, No Formatting Stress",
+    title: "Missing Keyword Detection",
     description:
-      "You can edit your CV online and see updates instantly without worrying about spacing, layout, or design issues.",
+      "Identify critical keywords and phrases from the job description that are absent from your CV, so you can add them before applying.",
   },
   {
-    icon: Smartphone,
-    title: "Smart Writing Support Along the Way",
+    icon: Target,
+    title: "Section-by-Section Analysis",
     description:
-      "Smart suggestions and writing prompts support you as you build your CV, making it easier to describe your experience clearly and professionally.",
+      "See how each CV section (summary, experience, skills, education) individually scores against the job requirements.",
   },
   {
     icon: Clock,
-    title: "Create Your CV Faster",
+    title: "Smart Rewrite Suggestions",
     description:
-      "The process is simple and focused, allowing you to create a polished, job ready CV quickly, even if you are applying under time pressure.",
+      "Receive AI-powered suggestions to rephrase your experience bullets and summary to better match the role without sounding forced.",
   },
   {
     icon: Download,
-    title: "Download Your CV for Free",
+    title: "Export Match Report",
     description:
-      "Once your CV is ready, you can download it as a clean, well formatted PDF that is suitable for online applications and email submissions.",
+      "Download a detailed PDF report showing your match score, gaps, and improvement priorities to guide your application strategy.",
   },
 ];
 
@@ -103,7 +102,7 @@ const testimonials = [
     name: "Sarah Chen",
     role: "Product Manager at Google",
     quote:
-      "The LinkedIn analyzer helped me optimize my profile and I got 3x more recruiter messages within a month!",
+      "The match score showed me exactly which keywords I was missing. Added them and got called back within a week!",
     badge: "+180% profile views",
   },
   {
@@ -112,7 +111,7 @@ const testimonials = [
     name: "Marcus Johnson",
     role: "Senior Developer at Microsoft",
     quote:
-      "Amazing insights! The keyword optimization suggestions were spot-on and helped me land my dream job.",
+      "I was applying to roles that were only 40% matches. Now I focus on 80%+ matches and my callback rate tripled.",
     badge: "+250% recruiter reach",
   },
   {
@@ -121,7 +120,7 @@ const testimonials = [
     name: "Emily Rodriguez",
     role: "Marketing Director at Spotify",
     quote:
-      "The profile photo evaluation and headline suggestions transformed my LinkedIn presence completely.",
+      "The section-by-section breakdown made it so clear where my CV was weak. Fixed it in 20 minutes.",
     badge: "+320% engagement",
   },
   {
@@ -130,12 +129,12 @@ const testimonials = [
     name: "David Kim",
     role: "Data Scientist at Netflix",
     quote:
-      "Free analysis that actually works! Got multiple job offers after implementing the recommendations.",
+      "Finally stopped guessing if my CV was good enough. The match report gives real, actionable data.",
     badge: "+400% job inquiries",
   },
 ];
 
-export default function CVBuilderPage() {
+export default function CVMatcherPage() {
   return (
     <div className="min-h-screen bg-white overflow-x-hidden pt-20">
       <Header />
@@ -154,22 +153,23 @@ export default function CVBuilderPage() {
               className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6"
             >
               <span className="bg-gradient-to-r from-black via-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Build the CV Recruiters Want to Read
+                Match Your CV to Any Job in Seconds
               </span>
             </motion.h1>
             <motion.p
               variants={fadeInUp}
               className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto mb-10"
             >
-              Create an ATS-optimized CV that highlights your experience clearly
-              and aligns with modern hiring systems.
+              Upload your CV and paste a job description to instantly see how
+              well you match. Get keyword analysis, gap identification, and
+              tailored rewrite suggestions.
             </motion.p>
             <motion.div variants={fadeInUp}>
               <a
                 href="#"
                 className="inline-block px-8 py-4 text-white font-bold rounded-full bg-gradient-to-r from-blue-600 to-purple-600 hover:shadow-lg hover:scale-105 transition-all duration-300"
               >
-                Build Your CV
+                Match My CV Now
               </a>
             </motion.div>
           </motion.div>
@@ -188,22 +188,22 @@ export default function CVBuilderPage() {
                 className="w-full h-full"
                 allow="autoplay; fullscreen"
                 allowFullScreen
-                title="CV Builder demo video"
+                title="CV Matcher demo video"
               />
             </div>
             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 md:p-8 text-left">
               <p className="text-white font-bold text-lg md:text-xl">
-                See How Our Resume Builder Works
+                See How CV Matching Works
               </p>
               <p className="text-gray-300 text-sm md:text-base mt-1">
-                Watch professionals create winning resumes in minutes
+                Watch how our AI compares your CV against real job descriptions
               </p>
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Section 2: How Our CV Builder Works */}
+      {/* Section 2: How Our CV Matcher Works */}
       <section className="py-20 md:py-28 bg-white">
         <div className="max-w-7xl mx-auto px-4">
           <motion.div
@@ -219,7 +219,7 @@ export default function CVBuilderPage() {
             >
               How Our CV{" "}
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Builder Works
+                Matcher Works
               </span>
             </motion.h2>
           </motion.div>
@@ -268,13 +268,13 @@ export default function CVBuilderPage() {
               href="#"
               className="inline-block px-8 py-4 text-white font-bold rounded-full bg-gradient-to-r from-blue-600 to-purple-600 hover:shadow-lg hover:scale-105 transition-all duration-300"
             >
-              Build Your CV
+              Match My CV Now
             </a>
           </motion.div>
         </div>
       </section>
 
-      {/* Section 3: What Makes Our CV Builder Different */}
+      {/* Section 3: What Makes Our CV Matcher Different */}
       <section className="py-20 md:py-28 bg-gradient-to-b from-slate-50 to-slate-200">
         <div className="max-w-7xl mx-auto px-4">
           <motion.div
@@ -290,7 +290,7 @@ export default function CVBuilderPage() {
             >
               What Makes Our CV{" "}
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Builder Different
+                Matcher Different
               </span>
             </motion.h2>
           </motion.div>
@@ -338,7 +338,7 @@ export default function CVBuilderPage() {
             >
               <div className="w-full aspect-[4/3] bg-gray-100 rounded-xl flex items-center justify-center">
                 <p className="text-gray-400 font-bold text-lg">
-                  CV Builder Preview
+                  CV Match Report Preview
                 </p>
               </div>
             </motion.div>
@@ -424,24 +424,21 @@ export default function CVBuilderPage() {
       <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6" style={{ background: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)" }}>
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl sm:text-4xl md:text-5xl mb-6 sm:mb-8 text-center font-bold" style={{ background: "linear-gradient(135deg, #000 0%, #3b82f6 50%, #8b5cf6 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-            Understanding How Our CV Builder Helps You
+            Understanding How CV Matching Improves Your Applications
           </h2>
           <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-lg space-y-4 sm:space-y-6 text-gray-700">
-            <p className="text-sm sm:text-base">
-              Our online resume maker revolutionizes how professionals create cv for jobs. Unlike traditional resume builders, CV Labz combines AI-powered content suggestions with ATS-optimized templates to ensure your free cv maker gets noticed by both hiring managers and applicant tracking systems.
-            </p>
             <div className="space-y-4 sm:space-y-6">
               <div>
-                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">1. What Does ATS-Friendly Really Mean</h3>
-                <p className="text-sm sm:text-base">Many companies use Applicant Tracking Systems to filter CVs before a recruiter ever sees them. An ATS-friendly CV follows the right structure, formatting, and keyword alignment so it can be properly read and evaluated. Our CV builder is designed to support this process, helping your resume stay readable and well-organized throughout screening.</p>
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">1. Why Match Scores Matter for Job Applications</h3>
+                <p className="text-sm sm:text-base">Most recruiters spend less than 10 seconds scanning a CV. A high match score means your CV immediately signals relevance — the right keywords in the right places. Our matcher analyzes alignment across skills, experience, and qualifications so you can see your CV the way an ATS does.</p>
               </div>
               <div>
-                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">2. How This CV Builder Helps You Stand Out</h3>
-                <p className="text-sm sm:text-base">You are not just filling in a template. As you build your CV, the system provides contextual guidance based on roles and industries, helping you describe your experience more clearly and professionally. The goal is to present your strengths in a way that feels natural, relevant, and easy to understand.</p>
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">2. How Keyword Gaps Cost You Interviews</h3>
+                <p className="text-sm sm:text-base">Job descriptions contain specific terms that ATS systems and recruiters search for. Missing even a few critical keywords can drop your CV to the bottom of the pile. Our tool identifies these gaps so you can address them before hitting submit.</p>
               </div>
               <div>
-                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">3. How This CV Builder Helps You Write Better Content</h3>
-                <p className="text-sm sm:text-base">Writing a CV is often harder than formatting it. Our AI resume builder supports you with prompts and examples that help you describe your experience clearly, avoid vague language, and focus on what recruiters actually look for in each section.</p>
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">3. From Match Score to Interview — Closing the Gap</h3>
+                <p className="text-sm sm:text-base">A match score is only useful if you act on it. Our tool doesn&apos;t just show the number — it gives you prioritized, section-specific suggestions so you know exactly what to fix, where to fix it, and how to phrase it for maximum impact.</p>
               </div>
             </div>
           </div>
@@ -456,12 +453,12 @@ export default function CVBuilderPage() {
           </h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {[
+              { title: "CV Builder", desc: "Build a professional, ATS-optimized CV in minutes", Icon: PenLine, href: "/cv-builder" },
               { title: "Motivation Letter", desc: "Write compelling cover letters that get noticed", Icon: MessageSquare, href: "/motivation-letter" },
               { title: "Assessments", desc: "Practice aptitude tests and skill assessments", Icon: BarChart3, href: "/online-assessments" },
               { title: "Salary Analyzer", desc: "Research market rates for your role and location", Icon: DollarSign, href: "/salary-analyzer" },
               { title: "LinkedIn Analyzer", desc: "Optimize your LinkedIn profile for better visibility", Icon: Linkedin, href: "/linkedin-analyzer" },
               { title: "Business Case Trainer", desc: "Master case interviews with guided practice", Icon: Briefcase, href: "/business-case-training" },
-              { title: "Company Research", desc: "Get insights on companies and interview processes", Icon: Building2, href: "/company-research-tool" },
             ].map((tool) => (
               <a key={tool.title} href={tool.href}>
                 <motion.div
@@ -487,14 +484,14 @@ export default function CVBuilderPage() {
       <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6" style={{ background: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)" }}>
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-4 sm:mb-6 font-bold" style={{ background: "linear-gradient(135deg, #000 0%, #3b82f6 50%, #8b5cf6 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-            Build a CV You Can Apply With Confidence
+            Stop Guessing. Start Matching.
           </h2>
           <p className="text-lg sm:text-xl md:text-2xl mb-6 sm:mb-8 text-gray-700 leading-relaxed px-4">
-            Start building a clear, professional CV with guided support designed for real job applications.
+            Upload your CV and paste any job description to see your match score instantly. No signup required.
           </p>
-          <a href="/dashboard">
+          <a href="#">
             <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 sm:px-10 py-4 sm:py-5 rounded-full text-lg sm:text-xl font-bold hover:from-blue-700 hover:to-purple-700 hover:shadow-xl transition-all duration-300 shadow-lg hover:scale-105">
-              Build Your CV for Free
+              Match My CV for Free
             </button>
           </a>
         </div>

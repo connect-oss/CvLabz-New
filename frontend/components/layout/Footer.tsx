@@ -1,258 +1,205 @@
-import { Linkedin, Instagram, Youtube, ArrowRight } from "lucide-react";
+"use client";
+import { Linkedin, Instagram, Mail, Send } from "lucide-react";
 
 export default function Footer() {
   return (
-    <>
-      {/* Newsletter CTA band — sits above the footer */}
-      <section className="bg-gray-900 border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-4 py-16">
-          <div className="bg-gradient-to-br from-blue-600/20 to-purple-600/20 border border-white/10 rounded-2xl px-8 py-10 md:px-12 md:py-12 flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="md:max-w-md">
-              <h3 className="text-2xl font-extrabold text-white mb-2">
-                Stay in the loop
-              </h3>
-              <p className="text-gray-400 font-medium">
-                Get weekly career tips, CV advice, and product updates. No spam.
-              </p>
+    <footer className="bg-gray-100 text-gray-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* Brand */}
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center relative overflow-hidden shadow-sm">
+                <div className="w-4 h-4 border-2 border-white rounded-full flex items-center justify-center">
+                  <div className="w-1.5 h-1.5 bg-white rounded-full" />
+                </div>
+                <div className="absolute bottom-0.5 w-5 h-2.5 border-2 border-white rounded-t-full border-b-0" />
+              </div>
+              <span className="text-xl font-black text-gray-900">CV Labz</span>
             </div>
-            <div className="flex flex-col sm:flex-row w-full md:w-auto gap-3">
-              <input
-                type="email"
-                placeholder="Your email"
-                className="w-full sm:flex-1 md:w-72 bg-white/10 border border-white/10 rounded-xl px-5 py-3.5 text-white font-bold placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
-              />
-              <button className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 py-3.5 rounded-xl font-black transition-colors flex items-center justify-center gap-2 shrink-0">
-                Subscribe <ArrowRight size={16} />
+            <p className="text-gray-600 text-sm leading-relaxed mb-6">
+              The all-in-one platform that gets you noticed and hired.
+            </p>
+            <div className="flex gap-3">
+              <a
+                href="https://www.linkedin.com/company/cv-labz/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Follow us on LinkedIn"
+                className="w-11 h-11 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors"
+              >
+                <Linkedin className="w-5 h-5 text-white" />
+              </a>
+              <a
+                href="https://www.tiktok.com/@cvlabz"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Follow us on TikTok"
+                className="w-11 h-11 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full flex items-center justify-center hover:opacity-80 transition-opacity"
+              >
+                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z" />
+                </svg>
+              </a>
+              <a
+                href="https://www.instagram.com/cv.labz/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Follow us on Instagram"
+                className="w-11 h-11 bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 rounded-full flex items-center justify-center hover:opacity-80 transition-opacity"
+              >
+                <Instagram className="w-5 h-5 text-white" />
+              </a>
+              <a
+                href="https://www.youtube.com/@CV_Labz"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Subscribe on YouTube"
+                className="w-11 h-11 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-700 transition-colors"
+              >
+                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          {/* Tools */}
+          <div>
+            <h4 className="text-lg font-bold text-gray-800 mb-4">Tools</h4>
+            <ul className="space-y-2">
+              <li>
+                <a href="/cv-builder" className="text-gray-600 hover:text-gray-800 transition-colors text-sm">
+                  CV Builder
+                </a>
+              </li>
+              <li>
+                <a href="/cv-matching" className="text-gray-600 hover:text-gray-800 transition-colors text-sm">
+                  CV Matcher
+                </a>
+              </li>
+              <li>
+                <a href="/#templates" className="text-gray-600 hover:text-gray-800 transition-colors text-sm">
+                  Templates
+                </a>
+              </li>
+              <li>
+                <a href="/motivation-letter" className="text-gray-600 hover:text-gray-800 transition-colors text-sm">
+                  Cover Letter
+                </a>
+              </li>
+              <li>
+                <a href="/linkedin-analyzer" className="text-gray-600 hover:text-gray-800 transition-colors text-sm">
+                  LinkedIn Analyzer
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Resources */}
+          <div>
+            <h4 className="text-lg font-bold text-gray-800 mb-4">Resources</h4>
+            <ul className="space-y-2">
+              <li>
+                <a href="/" className="text-gray-600 hover:text-gray-800 transition-colors text-sm">
+                  Home
+                </a>
+              </li>
+              <li>
+                <a href="/about" className="text-gray-600 hover:text-gray-800 transition-colors text-sm">
+                  About
+                </a>
+              </li>
+              <li>
+                <a href="/contact" className="text-gray-600 hover:text-gray-800 transition-colors text-sm">
+                  Contact
+                </a>
+              </li>
+              <li>
+                <a href="/blogs" className="text-gray-600 hover:text-gray-800 transition-colors text-sm">
+                  Blogs
+                </a>
+              </li>
+              <li>
+                <a href="/faqs" className="text-gray-600 hover:text-gray-800 transition-colors text-sm">
+                  FAQs
+                </a>
+              </li>
+              <li>
+                <a href="/tos" className="text-gray-600 hover:text-gray-800 transition-colors text-sm">
+                  Terms of Service
+                </a>
+              </li>
+              <li>
+                <a href="/privacy-policy" className="text-gray-600 hover:text-gray-800 transition-colors text-sm">
+                  Privacy Policy
+                </a>
+              </li>
+              <li>
+                <a href="/cookie-policy" className="text-gray-600 hover:text-gray-800 transition-colors text-sm">
+                  Cookie Policy
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Start Today */}
+          <div>
+            <h4 className="text-lg font-bold text-gray-800 mb-4">
+              Start Today
+            </h4>
+            <p className="text-gray-600 text-sm leading-relaxed mb-4">
+              Try CV Labz risk-free and take your job search experience to the
+              next level.
+            </p>
+            <a href="/login">
+              <button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-3 px-6 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 mb-3">
+                Start for free
               </button>
+            </a>
+            <p className="text-gray-600 text-xs text-center">
+              Cancel at any time - 100% privacy - Support via email &amp; chat
+            </p>
+
+            <div className="mt-6 pt-6 border-t border-gray-300">
+              <h5 className="text-sm font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                <Mail className="w-4 h-4" />
+                Subscribe to Newsletter
+              </h5>
+              <p className="text-gray-600 text-xs mb-3">
+                Get career tips and updates delivered to your inbox.
+              </p>
+              <form
+                className="flex gap-2"
+                onSubmit={(e) => e.preventDefault()}
+              >
+                <input
+                  type="email"
+                  placeholder="Your email"
+                  aria-label="Email address for newsletter"
+                  className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none"
+                />
+                <button
+                  type="submit"
+                  aria-label="Subscribe"
+                  className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200"
+                >
+                  <Send className="w-4 h-4" />
+                </button>
+              </form>
             </div>
           </div>
         </div>
-      </section>
 
-      {/* Footer */}
-      <footer className="pt-16 pb-12 bg-gray-900 text-white">
-        <div className="max-w-7xl mx-auto px-4">
-          {/* Main grid: brand left + 3 link columns right */}
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-[1.5fr,1fr,1fr,1fr] gap-12 mb-16">
-            {/* Brand */}
-            <div className="col-span-2 md:col-span-4 lg:col-span-1 space-y-5">
-              <div className="flex items-center gap-2">
-                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center relative overflow-hidden shadow-sm">
-                  <div className="w-4.5 h-4.5 border-2 border-white rounded-full flex items-center justify-center">
-                    <div className="w-1.5 h-1.5 bg-white rounded-full" />
-                  </div>
-                  <div className="absolute bottom-0.5 w-5 h-2.5 border-2 border-white rounded-t-full border-b-0" />
-                </div>
-                <span className="text-xl font-black">CV Labz</span>
-              </div>
-              <p className="text-gray-400 font-medium leading-relaxed max-w-xs text-sm">
-                The all-in-one platform that helps you build your CV, get more
-                interviews, and land your dream job.
-              </p>
-            </div>
-
-            {/* Tools */}
-            <div>
-              <h5 className="font-black text-xs uppercase tracking-widest text-blue-400 mb-6">
-                Tools
-              </h5>
-              <ul className="space-y-3 text-sm font-bold text-gray-400">
-                <li>
-                  <a href="/cv-builder" className="hover:text-white transition-colors">
-                    CV Builder
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    CV Matcher
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Templates
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Cover Letter
-                  </a>
-                </li>
-                <li>
-                  <a href="/linkedin-analyzer" className="hover:text-white transition-colors">
-                    LinkedIn Analyzer
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Company */}
-            <div>
-              <h5 className="font-black text-xs uppercase tracking-widest text-blue-400 mb-6">
-                Company
-              </h5>
-              <ul className="space-y-3 text-sm font-bold text-gray-400">
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    About us
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Careers
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Contact
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Press
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Resources */}
-            <div>
-              <h5 className="font-black text-xs uppercase tracking-widest text-blue-400 mb-6">
-                Resources
-              </h5>
-              <ul className="space-y-3 text-sm font-bold text-gray-400">
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Learning Hub
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    Blog
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-white transition-colors">
-                    FAQ
-                  </a>
-                </li>
-                <li>
-                  <a href="/tos" className="hover:text-white transition-colors">
-                    Terms of Service
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          {/* Bottom bar: copyright, socials, legal */}
-          <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-white/10 gap-6">
-            <p className="text-sm font-bold text-gray-500">
+        {/* Bottom bar */}
+        <div className="border-t border-gray-300 mt-8 pt-8">
+          <div className="text-center">
+            <p className="text-gray-500 text-sm">
               &copy; 2025 CV Labz. All rights reserved.
             </p>
-            <div className="flex items-center gap-4">
-              {[
-                { Icon: Linkedin, label: "LinkedIn" },
-                { Icon: Instagram, label: "Instagram" },
-                { Icon: Youtube, label: "YouTube" },
-              ].map(({ Icon, label }) => (
-                <a
-                  key={label}
-                  href="#"
-                  aria-label={label}
-                  className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 hover:border-white/20 transition-colors"
-                >
-                  <Icon size={16} />
-                </a>
-              ))}
-            </div>
-            <div className="flex items-center gap-6 text-sm font-bold text-gray-500">
-              <a href="/privacy-policy" className="hover:text-white transition-colors">
-                Privacy Policy
-              </a>
-              <a href="/cookie-policy" className="hover:text-white transition-colors">
-                Cookies
-              </a>
-            </div>
           </div>
         </div>
-      </footer>
-    </>
+      </div>
+    </footer>
   );
 }
-
-/* =============================================================================
- * ORIGINAL FOOTER — uncomment this and delete everything above to rollback
- * =============================================================================
- *
- * import { Linkedin, Instagram, Youtube } from "lucide-react";
- *
- * export default function Footer() {
- *   return (
- *     <footer className="pt-28 pb-12 bg-gray-900 text-white">
- *       <div className="max-w-7xl mx-auto px-4">
- *         <div className="grid md:grid-cols-2 lg:grid-cols-[2fr,1fr,1fr,1fr,2fr] gap-12 mb-24">
- *           <div className="space-y-8">
- *             <div className="flex items-center gap-2">
- *               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500" />
- *               <span className="text-2xl font-black">CV Labz</span>
- *             </div>
- *             <p className="text-gray-400 font-bold leading-relaxed max-w-xs">
- *               The all-in-one platform that helps you build your CV, get more interviews, and land your dream job.
- *             </p>
- *             <div className="flex items-center gap-4">
- *               {[Linkedin, Instagram, Youtube].map((Icon, i) => <a key={i} href="#" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors">
- *                 <Icon size={18} />
- *               </a>)}
- *             </div>
- *           </div>
- *           <div>
- *             <h5 className="font-black text-sm uppercase tracking-widest text-blue-400 mb-8">Tools</h5>
- *             <ul className="space-y-4 font-bold text-gray-400">
- *               <li><a href="#" className="hover:text-white transition-colors">CV Builder</a></li>
- *               <li><a href="#" className="hover:text-white transition-colors">CV Matcher</a></li>
- *               <li><a href="#" className="hover:text-white transition-colors">Templates</a></li>
- *               <li><a href="#" className="hover:text-white transition-colors">Cover Letter</a></li>
- *               <li><a href="#" className="hover:text-white transition-colors">LinkedIn Analyzer</a></li>
- *             </ul>
- *           </div>
- *           <div>
- *             <h5 className="font-black text-sm uppercase tracking-widest text-blue-400 mb-8">Company</h5>
- *             <ul className="space-y-4 font-bold text-gray-400">
- *               <li><a href="#" className="hover:text-white transition-colors">About us</a></li>
- *               <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
- *               <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
- *               <li><a href="#" className="hover:text-white transition-colors">Press</a></li>
- *             </ul>
- *           </div>
- *           <div>
- *             <h5 className="font-black text-sm uppercase tracking-widest text-blue-400 mb-8">Resources</h5>
- *             <ul className="space-y-4 font-bold text-gray-400">
- *               <li><a href="#" className="hover:text-white transition-colors">Learning Hub</a></li>
- *               <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
- *               <li><a href="#" className="hover:text-white transition-colors">FAQ</a></li>
- *               <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
- *             </ul>
- *           </div>
- *           <div className="bg-white/5 p-10 rounded-[2rem] border border-white/10">
- *             <h5 className="font-black text-sm uppercase tracking-widest text-blue-400 mb-4">Stay in the loop</h5>
- *             <p className="text-gray-400 font-bold text-sm mb-6">Get career tips and updates.</p>
- *             <div className="space-y-4">
- *               <input type="email" placeholder="Your email" className="w-full bg-white/10 border border-white/10 rounded-2xl px-6 py-4 font-bold focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all" />
- *               <button className="w-full bg-blue-600 text-white py-4 rounded-2xl font-black text-lg hover:bg-blue-700 transition-colors">
- *                 Subscribe
- *               </button>
- *             </div>
- *           </div>
- *         </div>
- *         <div className="flex flex-col md:flex-row items-center justify-between pt-12 border-t border-white/10 gap-6">
- *           <p className="text-sm font-bold text-gray-500">&copy; 2025 CV Labz. All rights reserved.</p>
- *           <div className="flex items-center gap-8 text-sm font-bold text-gray-500">
- *             <a href="#" className="hover:text-white">Privacy Policy</a>
- *             <a href="#" className="hover:text-white">Cookies</a>
- *           </div>
- *         </div>
- *       </div>
- *     </footer>
- *   );
- * }
- */
