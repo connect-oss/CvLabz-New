@@ -2,8 +2,12 @@
 import { useState } from "react";
 import { Linkedin, Instagram, Mail, Send, Loader2, Check } from "lucide-react";
 import { api } from "@/lib/api";
+import { useLanguage } from "@/lib/language";
+import { usePageContent } from "@/lib/usePageContent";
 
 export default function Footer() {
+  const { lang, t } = useLanguage();
+  const { getField } = usePageContent("global");
   const [nlEmail, setNlEmail] = useState("");
   const [nlLoading, setNlLoading] = useState(false);
   const [nlSuccess, setNlSuccess] = useState("");
@@ -48,7 +52,7 @@ export default function Footer() {
               <span className="text-xl font-black text-gray-900">CV Labz</span>
             </div>
             <p className="text-gray-600 text-sm leading-relaxed mb-6">
-              The all-in-one platform that gets you noticed and hired.
+              {getField("footer", "tagline", lang) || "The all-in-one platform that gets you noticed and hired."}
             </p>
             <div className="flex gap-3">
               <a
@@ -96,7 +100,7 @@ export default function Footer() {
 
           {/* Tools */}
           <div>
-            <h4 className="text-lg font-bold text-gray-800 mb-4">Tools</h4>
+            <h4 className="text-lg font-bold text-gray-800 mb-4">{t("Tools", "Hulpmiddelen")}</h4>
             <ul className="space-y-2">
               <li>
                 <a href="/cv-builder" className="text-gray-600 hover:text-gray-800 transition-colors text-sm">
@@ -128,46 +132,46 @@ export default function Footer() {
 
           {/* Resources */}
           <div>
-            <h4 className="text-lg font-bold text-gray-800 mb-4">Resources</h4>
+            <h4 className="text-lg font-bold text-gray-800 mb-4">{t("Resources", "Bronnen")}</h4>
             <ul className="space-y-2">
               <li>
                 <a href="/" className="text-gray-600 hover:text-gray-800 transition-colors text-sm">
-                  Home
+                  {t("Home", "Home")}
                 </a>
               </li>
               <li>
                 <a href="/about" className="text-gray-600 hover:text-gray-800 transition-colors text-sm">
-                  About
+                  {t("About", "Over ons")}
                 </a>
               </li>
               <li>
                 <a href="/contact" className="text-gray-600 hover:text-gray-800 transition-colors text-sm">
-                  Contact
+                  {t("Contact", "Contact")}
                 </a>
               </li>
               <li>
                 <a href="/blogs" className="text-gray-600 hover:text-gray-800 transition-colors text-sm">
-                  Blogs
+                  {t("Blogs", "Blog")}
                 </a>
               </li>
               <li>
                 <a href="/faqs" className="text-gray-600 hover:text-gray-800 transition-colors text-sm">
-                  FAQs
+                  {t("FAQs", "Veelgestelde vragen")}
                 </a>
               </li>
               <li>
                 <a href="/tos" className="text-gray-600 hover:text-gray-800 transition-colors text-sm">
-                  Terms of Service
+                  {t("Terms of Service", "Algemene Voorwaarden")}
                 </a>
               </li>
               <li>
                 <a href="/privacy-policy" className="text-gray-600 hover:text-gray-800 transition-colors text-sm">
-                  Privacy Policy
+                  {t("Privacy Policy", "Privacybeleid")}
                 </a>
               </li>
               <li>
                 <a href="/cookie-policy" className="text-gray-600 hover:text-gray-800 transition-colors text-sm">
-                  Cookie Policy
+                  {t("Cookie Policy", "Cookiebeleid")}
                 </a>
               </li>
             </ul>
@@ -176,28 +180,27 @@ export default function Footer() {
           {/* Start Today */}
           <div>
             <h4 className="text-lg font-bold text-gray-800 mb-4">
-              Start Today
+              {getField("footer", "ctaTitle", lang) || "Start Today"}
             </h4>
             <p className="text-gray-600 text-sm leading-relaxed mb-4">
-              Try CV Labz risk-free and take your job search experience to the
-              next level.
+              {getField("footer", "ctaDescription", lang) || "Try CV Labz risk-free and take your job search experience to the next level."}
             </p>
             <a href="/login">
               <button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-3 px-6 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 mb-3">
-                Start for free
+                {getField("footer", "ctaButtonText", lang) || "Start for free"}
               </button>
             </a>
             <p className="text-gray-600 text-xs text-center">
-              Cancel at any time - 100% privacy - Support via email &amp; chat
+              {t("Cancel at any time - 100% privacy - Support via email & chat", "Opzeggen op elk moment - 100% privacy - Ondersteuning via e-mail & chat")}
             </p>
 
             <div className="mt-6 pt-6 border-t border-gray-300">
               <h5 className="text-sm font-semibold text-gray-800 mb-2 flex items-center gap-2">
                 <Mail className="w-4 h-4" />
-                Subscribe to Newsletter
+                {getField("newsletter", "title", lang) || "Subscribe to Newsletter"}
               </h5>
               <p className="text-gray-600 text-xs mb-3">
-                Get career tips and updates delivered to your inbox.
+                {getField("newsletter", "subtitle", lang) || "Get career tips and updates delivered to your inbox."}
               </p>
               <form
                 className="flex gap-2"
@@ -205,7 +208,7 @@ export default function Footer() {
               >
                 <input
                   type="email"
-                  placeholder="Your email"
+                  placeholder={t("Your email", "Je e-mailadres")}
                   aria-label="Email address for newsletter"
                   value={nlEmail}
                   onChange={(e) => {
@@ -245,7 +248,7 @@ export default function Footer() {
         <div className="border-t border-gray-300 mt-8 pt-8">
           <div className="text-center">
             <p className="text-gray-500 text-sm">
-              &copy; 2025 CV Labz. All rights reserved.
+              {getField("footer", "copyright", lang) || "\u00A9 2025 CV Labz. All rights reserved."}
             </p>
           </div>
         </div>

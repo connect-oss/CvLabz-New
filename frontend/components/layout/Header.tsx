@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { api } from "@/lib/api";
 import { useLanguage } from "@/lib/language";
+import { usePageContent } from "@/lib/usePageContent";
 
 const TOOLS = [
   { label: "CV Builder", href: "/cv-builder", Icon: FileText },
@@ -33,7 +34,8 @@ interface AuthUser {
 }
 
 const Header = () => {
-  const { lang, setLang } = useLanguage();
+  const { lang, setLang, t } = useLanguage();
+  const { getField } = usePageContent("global");
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [toolsOpen, setToolsOpen] = React.useState(false);
   const [profileOpen, setProfileOpen] = React.useState(false);
@@ -97,7 +99,7 @@ const Header = () => {
                 onClick={() => setToolsOpen(!toolsOpen)}
                 className="flex items-center gap-1 font-bold text-gray-600 hover:text-blue-600 transition-colors"
               >
-                <span>Tools</span>
+                <span>{t("Tools", "Hulpmiddelen")}</span>
                 <ChevronDown
                   size={16}
                   className={`transition-transform duration-200 ${toolsOpen ? "rotate-180" : ""}`}
@@ -133,19 +135,19 @@ const Header = () => {
               href="/#templates"
               className="font-bold text-gray-600 hover:text-blue-600 transition-colors"
             >
-              Templates
+              {t("Templates", "Sjablonen")}
             </a>
             <a
               href="/#learning"
               className="font-bold text-gray-600 hover:text-blue-600 transition-colors"
             >
-              Learning Hub
+              {t("Learning Hub", "Kenniscentrum")}
             </a>
             <a
               href="/#pricing"
               className="font-bold text-gray-600 hover:text-blue-600 transition-colors"
             >
-              Pricing
+              {t("Pricing", "Prijzen")}
             </a>
           </div>
         </div>
@@ -203,7 +205,7 @@ const Header = () => {
                         className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
                       >
                         <LayoutDashboard size={16} />
-                        Admin Dashboard
+                        {t("Admin Dashboard", "Beheerderspaneel")}
                       </a>
                     )}
                     <a
@@ -211,14 +213,14 @@ const Header = () => {
                       className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                     >
                       <User size={16} />
-                      My Dashboard
+                      {t("My Dashboard", "Mijn Dashboard")}
                     </a>
                     <button
                       onClick={handleLogout}
                       className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
                     >
                       <LogOut size={16} />
-                      Sign out
+                      {t("Sign out", "Uitloggen")}
                     </button>
                   </motion.div>
                 )}
@@ -230,13 +232,13 @@ const Header = () => {
                 href="/login"
                 className="h-10 flex items-center px-4 text-sm font-bold text-gray-600 hover:text-gray-900 transition-colors bg-transparent"
               >
-                Login
+                {t("Login", "Inloggen")}
               </a>
               <a
                 href="/cv-builder"
                 className="h-10 flex items-center px-6 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-full font-bold hover:opacity-90 transition-all shadow-md shadow-purple-200 active:scale-95"
               >
-                Create new Resume
+                {getField("header", "ctaText", lang) || t("Create new Resume", "Nieuw CV maken")}
               </a>
             </>
           )}
@@ -261,7 +263,7 @@ const Header = () => {
             className="lg:hidden bg-white border-t border-gray-100 px-4 py-6 space-y-3 overflow-hidden"
           >
             <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">
-              Tools
+              {t("Tools", "Hulpmiddelen")}
             </p>
             {TOOLS.map(({ label, href, Icon }) => (
               <a
@@ -282,21 +284,21 @@ const Header = () => {
               className="block font-bold text-lg text-gray-800"
               onClick={() => setMobileOpen(false)}
             >
-              Templates
+              {t("Templates", "Sjablonen")}
             </a>
             <a
               href="/#learning"
               className="block font-bold text-lg text-gray-800"
               onClick={() => setMobileOpen(false)}
             >
-              Learning Hub
+              {t("Learning Hub", "Kenniscentrum")}
             </a>
             <a
               href="/#pricing"
               className="block font-bold text-lg text-gray-800"
               onClick={() => setMobileOpen(false)}
             >
-              Pricing
+              {t("Pricing", "Prijzen")}
             </a>
 
             <hr className="border-gray-100 my-2" />
@@ -341,7 +343,7 @@ const Header = () => {
                     onClick={() => setMobileOpen(false)}
                   >
                     <LayoutDashboard size={18} />
-                    Admin Dashboard
+                    {t("Admin Dashboard", "Beheerderspaneel")}
                   </a>
                 )}
                 <button
@@ -349,7 +351,7 @@ const Header = () => {
                   className="flex items-center gap-3 font-bold text-lg text-red-500 py-2 w-full text-left"
                 >
                   <LogOut size={18} />
-                  Sign out
+                  {t("Sign out", "Uitloggen")}
                 </button>
               </>
             ) : (
@@ -359,14 +361,14 @@ const Header = () => {
                   className="block w-full text-left font-bold text-lg py-2 text-gray-600"
                   onClick={() => setMobileOpen(false)}
                 >
-                  Login
+                  {t("Login", "Inloggen")}
                 </a>
                 <a
                   href="/cv-builder"
                   className="block w-full py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-full font-bold text-center"
                   onClick={() => setMobileOpen(false)}
                 >
-                  Create new Resume
+                  {getField("header", "ctaText", lang) || t("Create new Resume", "Nieuw CV maken")}
                 </a>
               </>
             )}
