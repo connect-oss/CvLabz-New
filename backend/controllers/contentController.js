@@ -834,10 +834,23 @@ const updatePage = async (req, res) => {
 const getPublicPage = async (req, res) => {
   try {
     const { pageKey } = req.params;
-    const page = await PageContent.findOne({ pageKey }).select('-updatedBy -__v').lean();
+    let page = await PageContent.findOne({ pageKey }).select('-updatedBy -__v').lean();
 
     if (!page) {
-      return res.status(404).json({ success: false, message: 'Page not found' });
+      // Auto-create with defaults if page doesn't exist yet
+      const label = PAGE_LABELS[pageKey];
+      if (!label) {
+        return res.status(404).json({ success: false, message: 'Page not found' });
+      }
+      page = await PageContent.create({
+        pageKey,
+        pageLabel: label,
+        sections: getDefaultSections(pageKey),
+        seo: { metaTitle_en: '', metaTitle_nl: '', metaDescription_en: '', metaDescription_nl: '' },
+      });
+      page = page.toObject();
+      delete page.updatedBy;
+      delete page.__v;
     }
 
     res.json({ success: true, data: page });
