@@ -1,0 +1,39 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: cvlabz-backend
+    working_dir: /app
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    environment:
+      PORT: 5001
+      FRONTEND_URL: http://localhost:3000
+      CLIENT_BASE_URL: http://localhost:3000
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    command: npm run dev
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: cvlabz-frontend
+    working_dir: /app
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:5001
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    command: npm run dev
