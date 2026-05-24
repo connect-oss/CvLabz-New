@@ -11,28 +11,49 @@ import {
   Settings,
   HelpCircle,
   ExternalLink,
+  type LucideIcon,
 } from "lucide-react";
+import { useAdmin } from "./AdminAuthGuard";
 
 interface AdminSidebarProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const mainLinks = [
-  { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
-  { label: "Users", href: "/admin/users", icon: Users },
-  { label: "Subscriptions", href: "/admin/subscriptions", icon: CreditCard },
-  { label: "Content", href: "/admin/content", icon: FileText },
-  { label: "Blogs", href: "/admin/blogs", icon: PenSquare },
+interface NavLink {
+  label: string;
+  href: string;
+  icon: LucideIcon;
+  permission: string; // maps to User.permissions array
+}
+
+// Each link has a required permission
+// Admin role sees ALL links. Staff only sees links they have permission for.
+const mainLinks: NavLink[] = [
+  { label: "Dashboard", href: "/admin", icon: LayoutDashboard, permission: "dashboard" },
+  { label: "Users", href: "/admin/users", icon: Users, permission: "users" },
+  { label: "Subscriptions", href: "/admin/subscriptions", icon: CreditCard, permission: "subscriptions" },
+  { label: "Content", href: "/admin/content", icon: FileText, permission: "templates" },
+  { label: "Blogs", href: "/admin/blogs", icon: PenSquare, permission: "blogs" },
 ];
 
 const settingsLinks = [
-  { label: "Settings", href: "#", icon: Settings },
-  { label: "Help & Support", href: "#", icon: HelpCircle },
+  { label: "Settings", href: "#", icon: Settings, permission: "settings" },
+  { label: "Help & Support", href: "#", icon: HelpCircle, permission: "" },
 ];
 
 export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
   const pathname = usePathname();
+  const { user, hasPermission } = useAdmin();
+
+  // Filter links based on permissions
+  const visibleMainLinks = mainLinks.filter((link) =>
+    hasPermission(link.permission)
+  );
+
+  const visibleSettingsLinks = settingsLinks.filter(
+    (link) => !link.permission || hasPermission(link.permission)
+  );
 
   const isActive = (href: string) => {
     if (href === "/admin") return pathname === "/admin";
@@ -41,24 +62,32 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
 
   const linkClasses = (href: string) =>
     isActive(href)
-      ? "flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-semibold bg-linear-to-r from-blue-50 to-purple-50 text-blue-700 border-l-3 border-blue-600"
+      ? "flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-semibold bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 border-l-3 border-blue-600"
       : "flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all";
 
   const iconClasses = (href: string) =>
     isActive(href) ? "w-5 h-5 text-blue-600" : "w-5 h-5";
 
+  // Get initials for the user avatar
+  const initials = user.name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+
   const sidebar = (
-    <div className="flex flex-col h-full w-72 bg-linear-to-b from-white to-slate-50/80 border-r border-gray-200">
+    <div className="flex flex-col h-full w-72 bg-gradient-to-b from-white to-slate-50/80 border-r border-gray-200">
       {/* Logo + Admin Badge */}
       <div className="flex items-center gap-3 px-6 py-5">
-        <div className="w-9 h-9 rounded-full bg-linear-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
           <span className="text-white text-sm font-bold">CV</span>
         </div>
         <span className="text-lg font-bold tracking-tight text-gray-900">
           CV Labz
         </span>
-        <span className="bg-linear-to-r from-blue-500 to-purple-500 text-white text-[10px] font-medium px-2 py-0.5 rounded-full">
-          Admin
+        <span className="bg-gradient-to-r from-blue-500 to-purple-500 text-white text-[10px] font-medium px-2 py-0.5 rounded-full capitalize">
+          {user.role}
         </span>
       </div>
 
@@ -68,8 +97,8 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
           Main Menu
         </p>
         <div className="space-y-1">
-          {mainLinks.map(({ label, href, icon: Icon }) => (
-            <Link key={href} href={href} className={linkClasses(href)}>
+          {visibleMainLinks.map(({ label, href, icon: Icon }) => (
+            <Link key={href} href={href} className={linkClasses(href)} onClick={onClose}>
               <Icon className={iconClasses(href)} />
               {label}
             </Link>
@@ -80,23 +109,39 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
       {/* Bottom Section */}
       <div className="px-4 pb-5">
         <div className="border-t border-gray-200 pt-4 mb-3" />
-        <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-3 px-4">
-          Settings
-        </p>
-        <div className="space-y-1">
-          {settingsLinks.map(({ label, href, icon: Icon }) => (
-            <Link
-              key={label}
-              href={href}
-              className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all"
-            >
-              <Icon className="w-5 h-5" />
-              {label}
-            </Link>
-          ))}
-        </div>
 
-        <div className="border-t border-gray-200 my-3" />
+        {visibleSettingsLinks.length > 0 && (
+          <>
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-3 px-4">
+              Settings
+            </p>
+            <div className="space-y-1">
+              {visibleSettingsLinks.map(({ label, href, icon: Icon }) => (
+                <Link
+                  key={label}
+                  href={href}
+                  className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all"
+                  onClick={onClose}
+                >
+                  <Icon className="w-5 h-5" />
+                  {label}
+                </Link>
+              ))}
+            </div>
+            <div className="border-t border-gray-200 my-3" />
+          </>
+        )}
+
+        {/* Current user */}
+        <div className="flex items-center gap-3 px-4 py-2.5 mb-2">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold shrink-0">
+            {initials}
+          </div>
+          <div className="min-w-0">
+            <p className="text-sm font-semibold text-gray-900 truncate">{user.name}</p>
+            <p className="text-[10px] text-gray-400 truncate">{user.email}</p>
+          </div>
+        </div>
 
         <Link
           href="/"

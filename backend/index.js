@@ -29,6 +29,8 @@ app.use(passport.initialize());
 
 // Routes
 app.use('/api/v1/auth', require('./routes/auth'));
+app.use('/api/v1/admin/users', require('./routes/adminUsers'));
+app.use('/api/v1/admin/blogs', require('./routes/adminBlogs'));
 
 // Health check
 app.get('/health', (req, res) => res.json({ status: 'ok', timestamp: new Date().toISOString() }));
