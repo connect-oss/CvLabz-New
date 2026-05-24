@@ -7,9 +7,11 @@ import { Mail, Lock, Eye, EyeOff, ArrowLeft, ArrowRight, Loader2, KeyRound } fro
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { api } from "@/lib/api";
+import { useLanguage } from "@/lib/language";
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [step, setStep] = useState<"email" | "reset">("email");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -66,12 +68,12 @@ export default function ForgotPasswordPage() {
               <KeyRound className="h-7 w-7 text-white" />
             </div>
             <h1 className="text-2xl font-extrabold text-gray-900">
-              {step === "email" ? "Forgot your password?" : "Reset your password"}
+              {step === "email" ? t("Forgot your password?", "Wachtwoord vergeten?") : t("Reset your password", "Wachtwoord resetten")}
             </h1>
             <p className="text-sm text-gray-500 mt-2">
               {step === "email"
-                ? "Enter your email and we'll send you a reset code."
-                : "Enter the 6-digit code sent to your email and your new password."}
+                ? t("Enter your email and we'll send you a reset code.", "Voer je e-mailadres in en we sturen je een resetcode.")
+                : t("Enter the 6-digit code sent to your email and your new password.", "Voer de 6-cijferige code in die naar je e-mail is gestuurd en je nieuwe wachtwoord.")}
             </p>
           </div>
 
@@ -86,7 +88,7 @@ export default function ForgotPasswordPage() {
             <form onSubmit={handleEmailSubmit} className="space-y-5">
               <div>
                 <label htmlFor="email" className="block text-sm font-bold text-gray-700 mb-1.5">
-                  Email address
+                  {t("Email address", "E-mailadres")}
                 </label>
                 <div className="relative">
                   <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -111,7 +113,7 @@ export default function ForgotPasswordPage() {
                   <Loader2 size={18} className="animate-spin" />
                 ) : (
                   <>
-                    Send reset code
+                    {t("Send reset code", "Verstuur resetcode")}
                     <ArrowRight size={16} />
                   </>
                 )}
@@ -121,7 +123,7 @@ export default function ForgotPasswordPage() {
             <form onSubmit={handleResetSubmit} className="space-y-5">
               <div>
                 <label htmlFor="otp" className="block text-sm font-bold text-gray-700 mb-1.5">
-                  Reset code
+                  {t("Reset code", "Resetcode")}
                 </label>
                 <input
                   id="otp"
@@ -130,14 +132,14 @@ export default function ForgotPasswordPage() {
                   maxLength={6}
                   value={otp}
                   onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
-                  placeholder="Enter 6-digit code"
+                  placeholder={t("Enter 6-digit code", "Voer 6-cijferige code in")}
                   className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-gray-900 font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-center text-lg tracking-[0.3em]"
                 />
               </div>
 
               <div>
                 <label htmlFor="newPassword" className="block text-sm font-bold text-gray-700 mb-1.5">
-                  New password
+                  {t("New password", "Nieuw wachtwoord")}
                 </label>
                 <div className="relative">
                   <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -147,7 +149,7 @@ export default function ForgotPasswordPage() {
                     required
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="Enter new password"
+                    placeholder={t("Enter new password", "Voer nieuw wachtwoord in")}
                     className="w-full bg-white border border-gray-200 rounded-xl pl-11 pr-12 py-3 text-gray-900 font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                   />
                   <button
@@ -169,7 +171,7 @@ export default function ForgotPasswordPage() {
                   <Loader2 size={18} className="animate-spin" />
                 ) : (
                   <>
-                    Reset password
+                    {t("Reset password", "Wachtwoord resetten")}
                     <ArrowRight size={16} />
                   </>
                 )}
@@ -180,7 +182,7 @@ export default function ForgotPasswordPage() {
                 onClick={() => { setStep("email"); setError(""); setOtp(""); setNewPassword(""); }}
                 className="w-full text-sm text-gray-500 font-medium hover:text-gray-700 transition-colors"
               >
-                Didn&apos;t receive a code? Try again
+                {t("Didn't receive a code? Try again", "Geen code ontvangen? Probeer opnieuw")}
               </button>
             </form>
           )}
@@ -192,7 +194,7 @@ export default function ForgotPasswordPage() {
               className="inline-flex items-center gap-1.5 text-sm font-bold text-gray-500 hover:text-gray-700 transition-colors"
             >
               <ArrowLeft className="h-4 w-4" />
-              Back to login
+              {t("Back to login", "Terug naar inloggen")}
             </Link>
           </div>
         </div>
