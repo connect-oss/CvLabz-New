@@ -2,9 +2,11 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-COPY package.json package-lock.json* ./
+COPY package.json ./
 
-RUN npm install
+# Install without lockfile to avoid platform-specific native bindings
+# and force resolve correct linux packages
+RUN npm install --no-package-lock --force
 
 COPY . .
 
