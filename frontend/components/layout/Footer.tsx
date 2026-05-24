@@ -1,7 +1,37 @@
 "use client";
-import { Linkedin, Instagram, Mail, Send } from "lucide-react";
+import { useState } from "react";
+import { Linkedin, Instagram, Mail, Send, Loader2, Check } from "lucide-react";
+import { api } from "@/lib/api";
 
 export default function Footer() {
+  const [nlEmail, setNlEmail] = useState("");
+  const [nlLoading, setNlLoading] = useState(false);
+  const [nlSuccess, setNlSuccess] = useState("");
+  const [nlError, setNlError] = useState("");
+
+  const handleNewsletter = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setNlLoading(true);
+    setNlSuccess("");
+    setNlError("");
+
+    try {
+      const res = await api<{ success: boolean; message: string }>(
+        "/api/v1/public/newsletter",
+        {
+          method: "POST",
+          body: { email: nlEmail },
+        }
+      );
+      setNlSuccess(res.message);
+      setNlEmail("");
+    } catch (err: unknown) {
+      setNlError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setNlLoading(false);
+    }
+  };
+
   return (
     <footer className="bg-gray-100 text-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -171,22 +201,42 @@ export default function Footer() {
               </p>
               <form
                 className="flex gap-2"
-                onSubmit={(e) => e.preventDefault()}
+                onSubmit={handleNewsletter}
               >
                 <input
                   type="email"
                   placeholder="Your email"
                   aria-label="Email address for newsletter"
+                  value={nlEmail}
+                  onChange={(e) => {
+                    setNlEmail(e.target.value);
+                    if (nlSuccess) setNlSuccess("");
+                    if (nlError) setNlError("");
+                  }}
+                  required
                   className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all outline-none"
                 />
                 <button
                   type="submit"
                   aria-label="Subscribe"
-                  className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200"
+                  disabled={nlLoading}
+                  className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  <Send className="w-4 h-4" />
+                  {nlLoading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : nlSuccess ? (
+                    <Check className="w-4 h-4" />
+                  ) : (
+                    <Send className="w-4 h-4" />
+                  )}
                 </button>
               </form>
+              {nlSuccess && (
+                <p className="text-green-600 text-xs mt-2">{nlSuccess}</p>
+              )}
+              {nlError && (
+                <p className="text-red-600 text-xs mt-2">{nlError}</p>
+              )}
             </div>
           </div>
         </div>

@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { useLanguage } from "@/lib/language";
+import { usePageContent } from "@/lib/usePageContent";
 
 interface FaqItem {
   id: string;
@@ -21,6 +23,7 @@ interface FaqItem {
 
 interface FaqCategory {
   title: string;
+  sectionKey: string;
   icon: React.ReactNode;
   items: FaqItem[];
 }
@@ -28,9 +31,10 @@ interface FaqCategory {
 const placeholder =
   "Coming soon — this answer will be updated with detailed information.";
 
-const faqCategories: FaqCategory[] = [
+const defaultFaqCategories: FaqCategory[] = [
   {
     title: "Account & Login",
+    sectionKey: "accountLogin",
     icon: <Lock className="w-5 h-5 text-purple-600" />,
     items: [
       { id: "al-1", question: "How do I create an account on CV Labz?", answer: placeholder },
@@ -45,6 +49,7 @@ const faqCategories: FaqCategory[] = [
   },
   {
     title: "CV & Cover Letter",
+    sectionKey: "cvCoverLetter",
     icon: <FileText className="w-5 h-5 text-blue-600" />,
     items: [
       { id: "cv-1", question: "How do I create my CV with CV Labz?", answer: placeholder },
@@ -59,6 +64,7 @@ const faqCategories: FaqCategory[] = [
   },
   {
     title: "Interview Preparation",
+    sectionKey: "interviewPrep",
     icon: <Target className="w-5 h-5 text-indigo-600" />,
     items: [
       { id: "ip-1", question: "What does CV Labz offer to prepare for a job interview?", answer: placeholder },
@@ -73,6 +79,7 @@ const faqCategories: FaqCategory[] = [
   },
   {
     title: "Assessments",
+    sectionKey: "assessments",
     icon: <Brain className="w-5 h-5 text-violet-600" />,
     items: [
       { id: "as-1", question: "What assessments are available on CV Labz?", answer: placeholder },
@@ -87,6 +94,7 @@ const faqCategories: FaqCategory[] = [
   },
   {
     title: "AI Coach & Tools",
+    sectionKey: "aiCoach",
     icon: <Sparkles className="w-5 h-5 text-purple-600" />,
     items: [
       { id: "ai-1", question: "What exactly does the AI Coach do?", answer: placeholder },
@@ -103,10 +111,31 @@ const faqCategories: FaqCategory[] = [
 
 export default function FaqsPage() {
   const [openId, setOpenId] = useState<string | null>(null);
+  const { lang } = useLanguage();
+  const { getField, getItems } = usePageContent("faqs");
 
   const toggle = (id: string) => {
     setOpenId((prev) => (prev === id ? null : id));
   };
+
+  // Build categories with dynamic content, falling back to defaults
+  const faqCategories = defaultFaqCategories.map((category) => {
+    const dynamicTitle = getField(category.sectionKey, "title", lang);
+    const dynamicItems = getItems(category.sectionKey, lang);
+    const items: FaqItem[] =
+      dynamicItems.length > 0
+        ? dynamicItems.map((item, idx) => ({
+            id: `${category.sectionKey}-${idx}`,
+            question: item.q || item.question || "",
+            answer: item.a || item.answer || placeholder,
+          }))
+        : category.items;
+    return {
+      ...category,
+      title: dynamicTitle || category.title,
+      items,
+    };
+  });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 overflow-x-hidden pt-20">
@@ -126,15 +155,15 @@ export default function FaqsPage() {
           </span>
 
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Frequently Asked{" "}
+            {getField("hero", "title", lang) || "Frequently Asked"}{" "}
             <span className="bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              Questions
+              {getField("hero", "titleHighlight", lang) || "Questions"}
             </span>
           </h1>
 
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Everything you want to know about CV Labz: from creating an account
-            to AI coaching and premium features.
+            {getField("hero", "subtitle", lang) ||
+              "Everything you want to know about CV Labz: from creating an account to AI coaching and premium features."}
           </p>
         </motion.div>
       </section>
@@ -143,7 +172,7 @@ export default function FaqsPage() {
       <section className="max-w-4xl mx-auto px-4 pb-24 space-y-10">
         {faqCategories.map((category, catIdx) => (
           <motion.div
-            key={category.title}
+            key={category.sectionKey}
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}

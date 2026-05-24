@@ -2,8 +2,32 @@
 import { motion } from "framer-motion";
 import { Star, Play, CheckCircle } from "lucide-react";
 import { VIDEO_CARDS } from "@/data/constants-data";
+import { useLanguage } from "@/lib/language";
+import { usePageContent } from "@/lib/usePageContent";
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
 
 export default function RealResultsWall() {
+  const { lang } = useLanguage();
+  const { getField, getItems } = usePageContent("homepage");
+
+  const title = getField("testimonials", "title", lang) || "Real Results from Real People";
+  const subtitle = getField("testimonials", "subtitle", lang) || "Authentic user experiences. No actors, just real job seekers who got hired.";
+  const verifiedBadge = getField("testimonials", "verifiedBadge", lang) || "Verified testimonials from CV Labz users";
+
+  const dynamicItems = getItems("testimonials", lang);
+  const cards = dynamicItems.length > 0
+    ? dynamicItems.map((item) => ({
+        id: item.id || item.name || "",
+        thumbnail: item.thumbnail?.startsWith("http") ? item.thumbnail : `${API_BASE}${item.thumbnail || ""}`,
+        title: item.title || "",
+        name: item.name || "",
+        role: item.role || "",
+        duration: item.duration || "",
+        description: item.quote || item.description || "",
+      }))
+    : VIDEO_CARDS;
+
   return (
     <section className="py-28 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       <div className="max-w-7xl mx-auto px-4">
@@ -24,20 +48,20 @@ export default function RealResultsWall() {
               fontFamily: "'Bricolage Grotesque', sans-serif",
               fontWeight: 800
             }}>
-              Real Results from Real People
+              {title}
             </h2>
           </div>
           <p className="text-xl text-gray-600 font-medium max-w-2xl mx-auto mb-8">
-            Authentic user experiences. No actors, just real job seekers who got hired.
+            {subtitle}
           </p>
           <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm px-5 py-2.5 rounded-full border border-white/60 shadow-sm">
             <CheckCircle className="w-4 h-4 text-green-500" />
-            <span className="text-sm font-bold text-gray-700">Verified testimonials from CV Labz users</span>
+            <span className="text-sm font-bold text-gray-700">{verifiedBadge}</span>
           </div>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          {VIDEO_CARDS.map((card, i) => <motion.div key={card.id} initial={{
+          {cards.map((card, i) => <motion.div key={card.id} initial={{
             opacity: 0,
             y: 32
           }} whileInView={{

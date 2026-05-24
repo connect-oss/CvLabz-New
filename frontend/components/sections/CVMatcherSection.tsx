@@ -3,15 +3,25 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Search, FileText, Check, ArrowRight } from "lucide-react";
 import CVMatcherMockup from "@/components/mockups/CVMatcherMockup";
+import { useLanguage } from "@/lib/language";
+import { usePageContent } from "@/lib/usePageContent";
 
 export default function CVMatcherSection() {
+  const { lang } = useLanguage();
+  const { getField } = usePageContent("homepage");
+
+  const sectionTitle = getField("cvMatcher", "title", lang) || "Match your CV to any job in 10 seconds.";
+  const subtitle = getField("cvMatcher", "subtitle", lang) || "Your CV does not match the job. Here is the gap.";
+  const ctaText = getField("cvMatcher", "ctaText", lang) || "Match my CV";
+  const ctaLink = getField("cvMatcher", "ctaLink", lang) || "#";
+
   return (
     <div className="mt-20">
       <h2 className="text-4xl lg:text-5xl font-extrabold text-gray-900 mb-6 tracking-tight text-center mx-auto" style={{
         fontFamily: "'Bricolage Grotesque', sans-serif",
         fontWeight: 800
       }}>
-        Match your CV to any job in 10 seconds.
+        {sectionTitle}
       </h2>
       <motion.div initial={{
         opacity: 0,
@@ -42,7 +52,7 @@ export default function CVMatcherSection() {
               fontFamily: "'Bricolage Grotesque', sans-serif",
               fontWeight: 800
             }}>
-              Your CV does not match the job. Here is the gap.
+              {subtitle}
             </h3>
 
             {/* Sub-copy */}
@@ -69,7 +79,7 @@ export default function CVMatcherSection() {
               </div>
               <input type="text" placeholder="Paste job posting URL" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm" />
               <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-black text-base transition-colors flex items-center justify-center gap-2 shadow-md shadow-blue-100">
-                <span>Match my CV</span>
+                <span>{ctaText}</span>
                 <ArrowRight size={16} />
               </button>
               <p className="text-xs font-bold text-gray-400">

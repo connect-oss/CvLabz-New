@@ -8,6 +8,7 @@ import {
   CreditCard,
   FileText,
   PenSquare,
+  Image,
   Settings,
   HelpCircle,
   ExternalLink,
@@ -35,6 +36,7 @@ const mainLinks: NavLink[] = [
   { label: "Subscriptions", href: "/admin/subscriptions", icon: CreditCard, permission: "subscriptions" },
   { label: "Content", href: "/admin/content", icon: FileText, permission: "templates" },
   { label: "Blogs", href: "/admin/blogs", icon: PenSquare, permission: "blogs" },
+  { label: "Media", href: "/admin/media", icon: Image, permission: "blogs" },
 ];
 
 const settingsLinks = [

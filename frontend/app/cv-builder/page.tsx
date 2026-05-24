@@ -2,6 +2,8 @@
 
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { useLanguage } from "@/lib/language";
+import { usePageContent } from "@/lib/usePageContent";
 import { motion } from "framer-motion";
 import {
   FileText,
@@ -21,6 +23,8 @@ import {
   Building2,
 } from "lucide-react";
 import Image from "next/image";
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
@@ -98,8 +102,7 @@ const features = [
 
 const testimonials = [
   {
-    image:
-      "https://images.unsplash.com/photo-1534751516642-a1af1ef26a56?w=400&h=500&fit=crop&crop=faces",
+    image: `${API_BASE}/uploads/testimonials/sarah-chen.jpg`,
     name: "Sarah Chen",
     role: "Product Manager at Google",
     quote:
@@ -107,8 +110,7 @@ const testimonials = [
     badge: "+180% profile views",
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=400&h=500&fit=crop&crop=faces",
+    image: `${API_BASE}/uploads/testimonials/marcus-johnson.jpg`,
     name: "Marcus Johnson",
     role: "Senior Developer at Microsoft",
     quote:
@@ -116,8 +118,7 @@ const testimonials = [
     badge: "+250% recruiter reach",
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1594311418510-ee5485be4f73?w=400&h=500&fit=crop&crop=faces",
+    image: `${API_BASE}/uploads/testimonials/emily-rodriguez.jpg`,
     name: "Emily Rodriguez",
     role: "Marketing Director at Spotify",
     quote:
@@ -125,8 +126,7 @@ const testimonials = [
     badge: "+320% engagement",
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1487309078313-fad80c3ec1e5?w=400&h=500&fit=crop&crop=faces",
+    image: `${API_BASE}/uploads/testimonials/david-kim.jpg`,
     name: "David Kim",
     role: "Data Scientist at Netflix",
     quote:
@@ -136,6 +136,30 @@ const testimonials = [
 ];
 
 export default function CVBuilderPage() {
+  const { lang } = useLanguage();
+  const { getField } = usePageContent("cv-builder");
+
+  // Hero
+  const heroTitle = getField("hero", "title", lang) || "Build the CV Recruiters Want to Read";
+  const heroSubtitle = getField("hero", "subtitle", lang) || "Create an ATS-optimized CV that highlights your experience clearly and aligns with modern hiring systems.";
+  const heroCtaText = getField("hero", "ctaText", lang) || "Build Your CV";
+  const heroCtaLink = getField("hero", "ctaLink", lang) || "#";
+  const videoUrl = getField("hero", "videoUrl", lang) || "https://player.vimeo.com/video/1125654210?autoplay=1&muted=1&loop=1&autopause=0&background=0&byline=0&title=0&controls=0";
+  const videoOverlayTitle = getField("hero", "videoOverlayTitle", lang) || "See How Our Resume Builder Works";
+  const videoOverlaySubtitle = getField("hero", "videoOverlaySubtitle", lang) || "Watch professionals create winning resumes in minutes";
+
+  // Section titles
+  const howItWorksTitle = getField("howItWorks", "title", lang) || "How Our CV Builder Works";
+  const featuresTitle = getField("features", "title", lang) || "What Makes Our CV Builder Different";
+  const testimonialsTitle = getField("testimonials", "title", lang) || "Hear from Job Seekers Like You";
+  const understandingTitle = getField("understanding", "title", lang) || "Understanding How Our CV Builder Helps You";
+  const otherToolsTitle = getField("otherTools", "title", lang) || "Explore Other Career Tools";
+
+  // Final CTA
+  const finalCtaTitle = getField("finalCta", "title", lang) || "Build a CV You Can Apply With Confidence";
+  const finalCtaSubtitle = getField("finalCta", "subtitle", lang) || "Start building a clear, professional CV with guided support designed for real job applications.";
+  const finalCtaText = getField("finalCta", "ctaText", lang) || "Build Your CV for Free";
+
   return (
     <div className="min-h-screen bg-white overflow-x-hidden pt-20">
       <Header />
@@ -154,22 +178,21 @@ export default function CVBuilderPage() {
               className="text-4xl md:text-6xl font-extrabold tracking-tight mb-6"
             >
               <span className="bg-gradient-to-r from-black via-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Build the CV Recruiters Want to Read
+                {heroTitle}
               </span>
             </motion.h1>
             <motion.p
               variants={fadeInUp}
               className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto mb-10"
             >
-              Create an ATS-optimized CV that highlights your experience clearly
-              and aligns with modern hiring systems.
+              {heroSubtitle}
             </motion.p>
             <motion.div variants={fadeInUp}>
               <a
-                href="#"
+                href={heroCtaLink}
                 className="inline-block px-8 py-4 text-white font-bold rounded-full bg-gradient-to-r from-blue-600 to-purple-600 hover:shadow-lg hover:scale-105 transition-all duration-300"
               >
-                Build Your CV
+                {heroCtaText}
               </a>
             </motion.div>
           </motion.div>
@@ -184,7 +207,7 @@ export default function CVBuilderPage() {
           >
             <div className="aspect-video w-full">
               <iframe
-                src="https://player.vimeo.com/video/1125654210?autoplay=1&muted=1&loop=1&autopause=0&background=0&byline=0&title=0&controls=0"
+                src={videoUrl}
                 className="w-full h-full"
                 allow="autoplay; fullscreen"
                 allowFullScreen
@@ -193,10 +216,10 @@ export default function CVBuilderPage() {
             </div>
             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 md:p-8 text-left">
               <p className="text-white font-bold text-lg md:text-xl">
-                See How Our Resume Builder Works
+                {videoOverlayTitle}
               </p>
               <p className="text-gray-300 text-sm md:text-base mt-1">
-                Watch professionals create winning resumes in minutes
+                {videoOverlaySubtitle}
               </p>
             </div>
           </motion.div>
@@ -215,12 +238,10 @@ export default function CVBuilderPage() {
           >
             <motion.h2
               variants={fadeInUp}
-              className="text-3xl md:text-5xl font-extrabold tracking-tight text-gray-900"
+              className="text-3xl md:text-5xl font-extrabold tracking-tight"
+              style={{ background: "linear-gradient(135deg, #000 0%, #3b82f6 50%, #8b5cf6 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}
             >
-              How Our CV{" "}
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Builder Works
-              </span>
+              {howItWorksTitle}
             </motion.h2>
           </motion.div>
 
@@ -265,10 +286,10 @@ export default function CVBuilderPage() {
             className="text-center mt-14"
           >
             <a
-              href="#"
+              href={heroCtaLink}
               className="inline-block px-8 py-4 text-white font-bold rounded-full bg-gradient-to-r from-blue-600 to-purple-600 hover:shadow-lg hover:scale-105 transition-all duration-300"
             >
-              Build Your CV
+              {heroCtaText}
             </a>
           </motion.div>
         </div>
@@ -286,12 +307,10 @@ export default function CVBuilderPage() {
           >
             <motion.h2
               variants={fadeInUp}
-              className="text-3xl md:text-5xl font-extrabold tracking-tight text-gray-900"
+              className="text-3xl md:text-5xl font-extrabold tracking-tight"
+              style={{ background: "linear-gradient(135deg, #000 0%, #3b82f6 50%, #8b5cf6 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}
             >
-              What Makes Our CV{" "}
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Builder Different
-              </span>
+              {featuresTitle}
             </motion.h2>
           </motion.div>
 
@@ -361,7 +380,7 @@ export default function CVBuilderPage() {
               className="text-3xl md:text-5xl font-extrabold tracking-tight"
             >
               <span className="bg-gradient-to-r from-black via-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Hear from Job Seekers Like You
+                {testimonialsTitle}
               </span>
             </motion.h2>
           </motion.div>
@@ -424,7 +443,7 @@ export default function CVBuilderPage() {
       <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6" style={{ background: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)" }}>
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl sm:text-4xl md:text-5xl mb-6 sm:mb-8 text-center font-bold" style={{ background: "linear-gradient(135deg, #000 0%, #3b82f6 50%, #8b5cf6 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-            Understanding How Our CV Builder Helps You
+            {understandingTitle}
           </h2>
           <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-lg space-y-4 sm:space-y-6 text-gray-700">
             <p className="text-sm sm:text-base">
@@ -452,7 +471,7 @@ export default function CVBuilderPage() {
       <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 bg-white">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 sm:mb-8 text-center" style={{ background: "linear-gradient(135deg, #000 0%, #3b82f6 50%, #8b5cf6 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-            Explore Other Career Tools
+            {otherToolsTitle}
           </h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {[
@@ -487,14 +506,14 @@ export default function CVBuilderPage() {
       <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6" style={{ background: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)" }}>
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-4 sm:mb-6 font-bold" style={{ background: "linear-gradient(135deg, #000 0%, #3b82f6 50%, #8b5cf6 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-            Build a CV You Can Apply With Confidence
+            {finalCtaTitle}
           </h2>
           <p className="text-lg sm:text-xl md:text-2xl mb-6 sm:mb-8 text-gray-700 leading-relaxed px-4">
-            Start building a clear, professional CV with guided support designed for real job applications.
+            {finalCtaSubtitle}
           </p>
           <a href="/dashboard">
             <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 sm:px-10 py-4 sm:py-5 rounded-full text-lg sm:text-xl font-bold hover:from-blue-700 hover:to-purple-700 hover:shadow-xl transition-all duration-300 shadow-lg hover:scale-105">
-              Build Your CV for Free
+              {finalCtaText}
             </button>
           </a>
         </div>

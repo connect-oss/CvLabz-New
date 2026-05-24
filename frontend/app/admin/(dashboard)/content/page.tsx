@@ -1,257 +1,214 @@
 "use client";
 
-import { useState } from "react";
-import { Plus, Pencil, Trash2, Star } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import {
+  Home,
+  Info,
+  FileText,
+  Search,
+  Linkedin,
+  Mail,
+  Phone,
+  HelpCircle,
+  Globe,
+  Loader2,
+  ArrowRight,
+  AlertCircle,
+} from "lucide-react";
+import { api } from "@/lib/api";
 
-type Tab = "FAQs" | "Testimonials" | "Articles";
+interface PageContent {
+  pageKey: string;
+  pageLabel: string;
+  updatedAt?: string;
+  updatedBy?: { name: string };
+}
 
-const categoryColors: Record<string, string> = {
-  "Account & Login": "bg-blue-50 text-blue-700",
-  "CV & Cover Letter": "bg-purple-50 text-purple-700",
-  "Interview Prep": "bg-emerald-50 text-emerald-700",
-  "Assessments": "bg-amber-50 text-amber-700",
-  "AI Coach": "bg-cyan-50 text-cyan-700",
-  "Billing": "bg-rose-50 text-rose-700",
+interface ContentResponse {
+  success: boolean;
+  data: PageContent[];
+}
+
+const PAGE_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+  homepage: Home,
+  about: Info,
+  "cv-builder": FileText,
+  "cv-matching": Search,
+  "linkedin-analyzer": Linkedin,
+  "motivation-letter": Mail,
+  contact: Phone,
+  faqs: HelpCircle,
+  global: Globe,
 };
 
-const faqs = [
-  { category: "Account & Login", question: "How do I reset my password or recover my account?", status: "Published" },
-  { category: "CV & Cover Letter", question: "Can I export my CV to PDF and Word formats?", status: "Published" },
-  { category: "Interview Prep", question: "How does the AI mock interview simulator work?", status: "Published" },
-  { category: "Assessments", question: "What types of skill assessments are available?", status: "Draft" },
-  { category: "AI Coach", question: "How does the AI career coach personalize recommendations?", status: "Published" },
-  { category: "Billing", question: "Can I cancel or change my subscription anytime?", status: "Draft" },
+const SECTIONS = [
+  {
+    title: "Main Pages",
+    keys: ["homepage", "about", "contact", "faqs"],
+  },
+  {
+    title: "Product Pages",
+    keys: ["cv-builder", "cv-matching", "linkedin-analyzer", "motivation-letter"],
+  },
+  {
+    title: "Global Elements",
+    keys: ["global"],
+  },
 ];
 
-const testimonials = [
-  { name: "Sophie de Vries", role: "Marketing Manager at Unilever", quote: "CVLabz helped me land my dream job within two weeks of using the platform. The AI suggestions were incredibly accurate.", rating: 5 },
-  { name: "Lars Jansen", role: "Senior Software Engineer", quote: "The AI-powered CV builder made my resume stand out from hundreds of applicants. I got 3x more callbacks.", rating: 5 },
-  { name: "Maria Gonzalez", role: "UX Design Lead at Spotify", quote: "I love the LinkedIn analyzer feature. It gave me actionable insights that transformed my professional presence.", rating: 5 },
-  { name: "Tom Bakker", role: "Data Analyst at ING Bank", quote: "The CV matcher tool helped me tailor my resume perfectly for each application. Absolutely game-changing.", rating: 5 },
-  { name: "Elena Rossi", role: "HR Consultant at Deloitte", quote: "I recommend CVLabz to all my clients. It saves them hours of work and produces stunning results every time.", rating: 5 },
-  { name: "Jan Smit", role: "Graduate Trainee at KPMG", quote: "As a fresh graduate, CVLabz gave me the confidence to apply for top companies. Landed my first role in weeks.", rating: 5 },
-];
+function timeAgo(dateString: string): string {
+  const now = new Date();
+  const date = new Date(dateString);
+  const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-const articleCategoryColors: Record<string, string> = {
-  "CV Tips": "bg-purple-50 text-purple-700",
-  "Interview": "bg-emerald-50 text-emerald-700",
-  "Career": "bg-blue-50 text-blue-700",
-  "LinkedIn": "bg-cyan-50 text-cyan-700",
-};
+  if (seconds < 60) return "just now";
 
-const articles = [
-  { title: "10 Tips for a Winning CV in 2026", author: "Sarah Williams", category: "CV Tips", status: "Published", date: "May 15, 2026" },
-  { title: "How to Ace Your Video Interview", author: "David Chen", category: "Interview", status: "Published", date: "May 10, 2026" },
-  { title: "Career Pivots: When and How to Make the Move", author: "Emma Taylor", category: "Career", status: "Draft", date: "May 8, 2026" },
-  { title: "Remote Work: Updating Your CV for Virtual Roles", author: "Sarah Williams", category: "CV Tips", status: "Published", date: "May 3, 2026" },
-  { title: "LinkedIn Profile Optimization: The Complete Guide", author: "David Chen", category: "LinkedIn", status: "Published", date: "Apr 28, 2026" },
-  { title: "Salary Negotiation Strategies for Every Career Stage", author: "Emma Taylor", category: "Career", status: "Draft", date: "Apr 22, 2026" },
-];
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes} minute${minutes !== 1 ? "s" : ""} ago`;
+
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} hour${hours !== 1 ? "s" : ""} ago`;
+
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days} day${days !== 1 ? "s" : ""} ago`;
+
+  const months = Math.floor(days / 30);
+  if (months < 12) return `${months} month${months !== 1 ? "s" : ""} ago`;
+
+  const years = Math.floor(months / 12);
+  return `${years} year${years !== 1 ? "s" : ""} ago`;
+}
 
 export default function ContentPage() {
-  const [activeTab, setActiveTab] = useState<Tab>("FAQs");
-  const tabs: Tab[] = ["FAQs", "Testimonials", "Articles"];
+  const router = useRouter();
+  const [pages, setPages] = useState<PageContent[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchPages() {
+      try {
+        setLoading(true);
+        setError(null);
+        const res = await api<ContentResponse>("/api/v1/admin/content");
+        setPages(res.data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to load pages");
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchPages();
+  }, []);
+
+  const pageMap = new Map(pages.map((p) => [p.pageKey, p]));
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-32">
+        <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center py-32 gap-4">
+        <div className="h-12 w-12 rounded-full bg-red-50 flex items-center justify-center">
+          <AlertCircle className="h-6 w-6 text-red-500" />
+        </div>
+        <div className="text-center">
+          <p className="text-sm font-medium text-gray-900">Failed to load content</p>
+          <p className="text-sm text-gray-500 mt-1">{error}</p>
+        </div>
+        <button
+          onClick={() => window.location.reload()}
+          className="text-sm font-medium text-blue-600 hover:text-blue-700 transition"
+        >
+          Try again
+        </button>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Content</h1>
-        <p className="text-sm text-gray-500 mt-1">Manage FAQs, testimonials, and articles</p>
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Content Management</h1>
+          <p className="text-sm text-gray-500 mt-1">
+            Edit page content, translations, and SEO across your website
+          </p>
+        </div>
+        <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-4 py-2.5">
+          <Globe className="h-4 w-4 text-gray-400" />
+          <span className="text-sm text-gray-500">Site Language:</span>
+          <span className="text-sm font-medium text-gray-900 bg-gray-100 px-2.5 py-0.5 rounded-lg">
+            English
+          </span>
+          <span className="text-sm font-medium text-gray-500 hover:text-gray-700 cursor-pointer px-2.5 py-0.5 rounded-lg transition">
+            Nederlands
+          </span>
+        </div>
       </div>
 
-      {/* Tab Bar */}
-      <div className="bg-white rounded-2xl border border-gray-200 p-1 inline-flex gap-1">
-        {tabs.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-5 py-2 text-sm font-medium rounded-xl transition-all ${
-              activeTab === tab
-                ? "bg-linear-to-r from-blue-500 to-purple-500 text-white shadow-sm"
-                : "text-gray-600 hover:text-gray-900"
-            }`}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
+      {/* Page Sections */}
+      {SECTIONS.map((section) => {
+        const sectionPages = section.keys
+          .map((key) => pageMap.get(key) || { pageKey: key, pageLabel: key })
+          .filter(Boolean);
 
-      {/* FAQs Tab */}
-      {activeTab === "FAQs" && (
-        <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-            <div className="flex items-center gap-3">
-              <h2 className="text-base font-semibold text-gray-900">FAQ Items</h2>
-              <span className="bg-gray-100 text-gray-600 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                {faqs.length}
-              </span>
-            </div>
-            <button className="flex items-center gap-2 bg-linear-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-xl text-sm font-medium hover:opacity-90 transition shadow-sm">
-              <Plus className="h-4 w-4" />
-              Add FAQ
-            </button>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="bg-gray-50/50 text-left text-gray-500">
-                  <th className="px-6 py-3 font-medium">Category</th>
-                  <th className="px-6 py-3 font-medium">Question</th>
-                  <th className="px-6 py-3 font-medium">Status</th>
-                  <th className="px-6 py-3 font-medium">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {faqs.map((faq, i) => (
-                  <tr key={i} className="hover:bg-gray-50/50 transition-colors">
-                    <td className="px-6 py-4">
-                      <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${categoryColors[faq.category] || "bg-gray-100 text-gray-700"}`}>
-                        {faq.category}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-gray-900">{faq.question}</td>
-                    <td className="px-6 py-4">
-                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        faq.status === "Published"
-                          ? "bg-emerald-50 text-emerald-700"
-                          : "bg-gray-100 text-gray-600"
-                      }`}>
-                        <span className={`h-1.5 w-1.5 rounded-full ${
-                          faq.status === "Published" ? "bg-emerald-500" : "bg-gray-400"
-                        }`} />
-                        {faq.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-1">
-                        <button className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors" title="Edit">
-                          <Pencil className="h-4 w-4" />
-                        </button>
-                        <button className="p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors" title="Delete">
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
+        if (sectionPages.length === 0) return null;
 
-      {/* Testimonials Tab */}
-      {activeTab === "Testimonials" && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {testimonials.map((t, i) => (
-            <div
-              key={i}
-              className="bg-white rounded-2xl border border-gray-200 p-5 hover:shadow-md transition-shadow"
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-linear-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-sm font-semibold shrink-0">
-                    {t.name.split(" ").map((n) => n[0]).join("")}
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-900 text-sm">{t.name}</p>
-                    <p className="text-xs text-gray-500">{t.role}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-0.5">
-                  <button className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors" title="Edit">
-                    <Pencil className="h-3.5 w-3.5" />
-                  </button>
-                  <button className="p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors" title="Delete">
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </button>
-                </div>
-              </div>
-              <p className="text-sm text-gray-600 italic leading-relaxed mb-4">
-                &ldquo;{t.quote}&rdquo;
-              </p>
-              <div className="flex gap-0.5">
-                {Array.from({ length: 5 }).map((_, idx) => (
-                  <Star
-                    key={idx}
-                    className={`h-4 w-4 ${
-                      idx < t.rating
-                        ? "text-yellow-400 fill-yellow-400"
-                        : "text-gray-200"
-                    }`}
-                  />
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+        return (
+          <div key={section.title} className="space-y-4">
+            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">
+              {section.title}
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {sectionPages.map((page) => {
+                const Icon = PAGE_ICONS[page.pageKey] || FileText;
 
-      {/* Articles Tab */}
-      {activeTab === "Articles" && (
-        <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="bg-gray-50/50 text-left text-gray-500">
-                  <th className="px-6 py-3 font-medium">Title</th>
-                  <th className="px-6 py-3 font-medium">Author</th>
-                  <th className="px-6 py-3 font-medium">Category</th>
-                  <th className="px-6 py-3 font-medium">Status</th>
-                  <th className="px-6 py-3 font-medium">Date</th>
-                  <th className="px-6 py-3 font-medium">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {articles.map((a, i) => (
-                  <tr key={i} className="hover:bg-gray-50/50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-gray-900">
-                      {a.title}
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2.5">
-                        <div className="h-7 w-7 rounded-full bg-linear-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-[10px] font-semibold shrink-0">
-                          {a.author.split(" ").map((n) => n[0]).join("")}
+                return (
+                  <div
+                    key={page.pageKey}
+                    onClick={() => router.push(`/admin/content/${page.pageKey}`)}
+                    className="bg-white rounded-2xl border border-gray-200 p-6 hover:shadow-md transition cursor-pointer group"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-start gap-4">
+                        <div className="h-10 w-10 rounded-xl bg-linear-to-br from-blue-50 to-purple-50 flex items-center justify-center shrink-0">
+                          <Icon className="h-5 w-5 text-blue-600" />
                         </div>
-                        <span className="text-gray-700">{a.author}</span>
+                        <div>
+                          <p className="font-semibold text-gray-900">
+                            {page.pageLabel}
+                          </p>
+                          <p className="text-sm text-gray-400 mt-1">
+                            {page.updatedAt
+                              ? `Last edited ${timeAgo(page.updatedAt)}`
+                              : "Not yet edited"}
+                          </p>
+                          {page.updatedBy && (
+                            <p className="text-xs text-gray-400 mt-0.5">
+                              by {page.updatedBy.name}
+                            </p>
+                          )}
+                        </div>
                       </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${articleCategoryColors[a.category] || "bg-gray-100 text-gray-700"}`}>
-                        {a.category}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        a.status === "Published"
-                          ? "bg-emerald-50 text-emerald-700"
-                          : "bg-gray-100 text-gray-600"
-                      }`}>
-                        <span className={`h-1.5 w-1.5 rounded-full ${
-                          a.status === "Published" ? "bg-emerald-500" : "bg-gray-400"
-                        }`} />
-                        {a.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-gray-500">{a.date}</td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-1">
-                        <button className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors" title="Edit">
-                          <Pencil className="h-4 w-4" />
-                        </button>
-                        <button className="p-1.5 rounded-lg hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors" title="Delete">
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                      <button className="h-8 w-8 rounded-lg flex items-center justify-center text-gray-300 group-hover:text-blue-500 group-hover:bg-blue-50 transition">
+                        <ArrowRight className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </div>
-      )}
+        );
+      })}
     </div>
   );
 }

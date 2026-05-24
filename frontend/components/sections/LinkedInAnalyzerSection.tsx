@@ -3,15 +3,26 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Linkedin, Check, ArrowRight } from "lucide-react";
 import LinkedInMockup from "@/components/mockups/LinkedInMockup";
+import { useLanguage } from "@/lib/language";
+import { usePageContent } from "@/lib/usePageContent";
 
 export default function LinkedInAnalyzerSection() {
+  const { lang } = useLanguage();
+  const { getField } = usePageContent("homepage");
+
+  const sectionTitle = getField("linkedinAnalyzer", "title", lang) || "Score your LinkedIn in 30 seconds.";
+  const subtitle = getField("linkedinAnalyzer", "subtitle", lang) || "Your LinkedIn is costing you interviews.";
+  const ctaText = getField("linkedinAnalyzer", "ctaText", lang) || "Analyze";
+  const ctaLink = getField("linkedinAnalyzer", "ctaLink", lang) || "#";
+  const inputPlaceholder = getField("linkedinAnalyzer", "inputPlaceholder", lang) || "Paste LinkedIn profile URL";
+
   return (
     <div>
       <h2 className="text-4xl lg:text-5xl font-extrabold text-gray-900 mb-6 tracking-tight text-center mx-auto" style={{
         fontFamily: "'Bricolage Grotesque', sans-serif",
         fontWeight: 800
       }}>
-        Score your LinkedIn in 30 seconds.
+        {sectionTitle}
       </h2>
       <motion.div initial={{
         opacity: 0,
@@ -47,7 +58,7 @@ export default function LinkedInAnalyzerSection() {
               fontFamily: "'Bricolage Grotesque', sans-serif",
               fontWeight: 800
             }}>
-              Your LinkedIn is costing you interviews.
+              {subtitle}
             </h3>
 
             {/* Sub-copy */}
@@ -69,10 +80,10 @@ export default function LinkedInAnalyzerSection() {
             {/* Form */}
             <div className="flex flex-col gap-3">
               <div className="relative">
-                <input type="text" placeholder="Paste LinkedIn profile URL" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm" />
+                <input type="text" placeholder={inputPlaceholder} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-5 py-4 font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm" />
               </div>
               <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-black text-base transition-colors flex items-center justify-center gap-2 shadow-md shadow-blue-100">
-                <span>Analyze</span>
+                <span>{ctaText}</span>
                 <ArrowRight size={16} />
               </button>
               <p className="text-xs font-bold text-gray-400">

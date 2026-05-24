@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const User = require('../models/User');
 const { signAuthToken } = require('../utils/jwt');
 const { setAuthCookie, clearAuthCookie } = require('../utils/cookies');
@@ -12,6 +13,14 @@ const register = async (req, res) => {
     }
 
     const user = await User.create({ name, email, password, provider: 'local' });
+
+    // Generate email verification token
+    const verificationToken = crypto.randomBytes(32).toString('hex');
+    user.verificationToken = verificationToken;
+    user.verificationTokenExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+    await user.save();
+
+    console.log(`Verification link: ${process.env.FRONTEND_URL}/api/v1/auth/verify-email?token=${verificationToken}`);
 
     const token = signAuthToken({ id: user._id });
     setAuthCookie(res, token);
@@ -116,4 +125,76 @@ const googleCallback = async (req, res) => {
   }
 };
 
-module.exports = { register, login, adminLogin, getMe, logout, googleCallback };
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await User.findOne({ email });
+    if (user) {
+      const otp = Math.floor(100000 + Math.random() * 900000).toString();
+      user.resetPasswordOTP = otp;
+      user.resetPasswordOTPExpiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
+      await user.save();
+
+      console.log(`Password reset OTP for ${email}:`, otp);
+    }
+
+    return res.json({ success: true, message: 'If an account exists, a reset code has been sent' });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+const resetPassword = async (req, res) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ success: false, message: 'Invalid or expired reset code' });
+    }
+
+    if (!user.resetPasswordOTP || user.resetPasswordOTP !== otp) {
+      return res.status(400).json({ success: false, message: 'Invalid or expired reset code' });
+    }
+
+    if (!user.resetPasswordOTPExpiresAt || user.resetPasswordOTPExpiresAt < Date.now()) {
+      return res.status(400).json({ success: false, message: 'Invalid or expired reset code' });
+    }
+
+    user.password = newPassword;
+    user.resetPasswordOTP = undefined;
+    user.resetPasswordOTPExpiresAt = undefined;
+    await user.save();
+
+    return res.json({ success: true, message: 'Password reset successfully' });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+const verifyEmail = async (req, res) => {
+  try {
+    const { token } = req.query;
+
+    const user = await User.findOne({
+      verificationToken: token,
+      verificationTokenExpiresAt: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.redirect(`${process.env.FRONTEND_URL}/login?error=invalid_token`);
+    }
+
+    user.isEmailVerified = true;
+    user.verificationToken = undefined;
+    user.verificationTokenExpiresAt = undefined;
+    await user.save();
+
+    return res.redirect(`${process.env.FRONTEND_URL}/login?verified=true`);
+  } catch (err) {
+    return res.redirect(`${process.env.FRONTEND_URL}/login?error=server_error`);
+  }
+};
+
+module.exports = { register, login, adminLogin, getMe, logout, googleCallback, forgotPassword, resetPassword, verifyEmail };

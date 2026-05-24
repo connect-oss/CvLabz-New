@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 import { Bricolage_Grotesque } from 'next/font/google';
 import BrokenImageHandler from '@/components/BrokenImageHandler';
 import AnimationConfig from '@/components/AnimationConfig';
+import Providers from '@/components/Providers';
 import './globals.css';
 
 const bricolage = Bricolage_Grotesque({
@@ -78,11 +79,13 @@ export default function RootLayout({
             }),
           }}
         />
-        <BrokenImageHandler />
-        <Suspense>
-          <AnimationConfig />
-        </Suspense>
-        {children}
+        <Providers>
+          <BrokenImageHandler />
+          <Suspense>
+            <AnimationConfig />
+          </Suspense>
+          {children}
+        </Providers>
       </body>
     </html>
   );

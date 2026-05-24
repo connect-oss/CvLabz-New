@@ -9,6 +9,8 @@ import CVTemplateBoldHeader from "@/components/templates/CVTemplateBoldHeader";
 import CVTemplateCreative from "@/components/templates/CVTemplateCreative";
 import CVTemplateATSClean from "@/components/templates/CVTemplateATSClean";
 import type { TemplateCardDef } from "@/data/types";
+import { useLanguage } from "@/lib/language";
+import { usePageContent } from "@/lib/usePageContent";
 
 const TEMPLATE_CARD_DEFS: TemplateCardDef[] = [
   { id: "classic", label: "Classic", component: <CVTemplateClassic /> },
@@ -20,6 +22,12 @@ const TEMPLATE_CARD_DEFS: TemplateCardDef[] = [
 ];
 
 export default function TemplatesSection() {
+  const { lang } = useLanguage();
+  const { getField } = usePageContent("homepage");
+
+  const title = getField("templates", "title", lang) || "ATS-friendly templates that do not look like everyone else's.";
+  const subtitle = getField("templates", "subtitle", lang) || "Recruiters see 200 CVs a week. Yours should not blend in.";
+
   const templateScrollRef = useRef<HTMLDivElement>(null);
   const scrollTemplates = (direction: "left" | "right") => {
     if (templateScrollRef.current) {
@@ -34,11 +42,11 @@ export default function TemplatesSection() {
     <section className="py-28 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 mb-16 flex items-end justify-between">
         <div>
-          <h2 className="text-4xl font-extrabold text-gray-900 mb-3">ATS-friendly templates that do not look like everyone else's.</h2>
-          <p className="text-lg text-gray-500 font-bold mb-4">Recruiters see 200 CVs a week. Yours should not blend in.</p>
+          <h2 className="text-4xl font-extrabold text-gray-900 mb-3">{title}</h2>
+          <p className="text-lg text-gray-500 font-bold mb-4">{subtitle}</p>
           <div className="w-20 h-1.5 bg-blue-600 rounded-full" />
         </div>
-        <a href="#" className="flex items-center gap-2 font-extrabold text-blue-600 hover:gap-3 transition-all">
+        <a href="/#templates" className="flex items-center gap-2 font-extrabold text-blue-600 hover:gap-3 transition-all">
           <span>See all templates</span> <ArrowRight size={20} />
         </a>
       </div>

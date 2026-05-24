@@ -2,8 +2,35 @@
 import { motion } from "framer-motion";
 import { Check, ArrowRight, Star } from "lucide-react";
 import HeroCVMockup from "@/components/mockups/HeroCVMockup";
+import { useLanguage } from "@/lib/language";
+import { usePageContent } from "@/lib/usePageContent";
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
 
 export default function HeroSection() {
+  const { lang } = useLanguage();
+  const { getField, getImage } = usePageContent("homepage");
+
+  // Content with fallbacks
+  const badge = getField("hero", "badge", lang) || (lang === "nl" ? "€0,99 VOOR 14 DAGEN" : "€0,99 FOR 14 DAYS");
+  const title = getField("hero", "title", lang) || (lang === "nl" ? "Deze CV-bouwer helpt je sneller aan een baan." : "This resume builder gets you hired faster.");
+  const subtitle = getField("hero", "subtitle", lang) || (lang === "nl" ? "CV Labz bouwt je CV, beoordeelt je LinkedIn, matcht je met elke vacature en schrijft je motivatiebrief. Alles op één plek." : "CV Labz builds your CV, scores your LinkedIn, matches you to any vacancy, and writes your cover letter. All in one place.");
+  const ctaText = getField("hero", "ctaText", lang) || (lang === "nl" ? "Start 14 dagen voor €0,99" : "Start 14 days for €0,99");
+  const secondaryCta = getField("hero", "secondaryCtaText", lang) || (lang === "nl" ? "Upload mijn CV" : "Upload my resume");
+  const priceText = getField("hero", "priceText", lang) || (lang === "nl" ? "€0,99 ontgrendelt alles voor 14 dagen. Opzeggen in één klik." : "€0,99 unlocks everything for 14 days. Cancel in one click.");
+  const afterPrice = getField("hero", "afterPrice", lang) || (lang === "nl" ? "Daarna €19,99/maand. Geen e-mails, geen gedoe." : "After that €19,99/month. No emails, no friction.");
+  const counterNum = getField("seoMetrics", "counterNumber", lang) || "1,247";
+  const counterLabel = getField("seoMetrics", "counterLabel", lang) || (lang === "nl" ? "cv's vandaag gemaakt" : "resumes created today");
+  const trustText = getField("seoMetrics", "trustText", lang) || (lang === "nl" ? "4.8/5 van 2.300+ gebruikers" : "4.8/5 from 2,300+ users");
+  const noSignup = lang === "nl" ? "Geen registratie nodig" : "No sign-up required";
+  const cancelClick = lang === "nl" ? "Opzeggen in één klik" : "Cancel in one click";
+
+  const avatar1 = getImage("hero", "avatar1", lang) || `${API_BASE}/uploads/avatars/avatar-1.jpg`;
+  const avatar2 = getImage("hero", "avatar2", lang) || `${API_BASE}/uploads/avatars/avatar-2.jpg`;
+  const avatar3 = getImage("hero", "avatar3", lang) || `${API_BASE}/uploads/avatars/avatar-3.jpg`;
+  const avatar4 = getImage("hero", "avatar4", lang) || `${API_BASE}/uploads/avatars/avatar-4.jpg`;
+  const avatars = [avatar1, avatar2, avatar3, avatar4];
+
   return (
     <section
       className="relative overflow-hidden flex items-center"
@@ -19,29 +46,28 @@ export default function HeroSection() {
           <motion.div
             animate={{ scale: [1, 1.03, 1] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-            className="inline-flex items-center gap-2 text-white px-4 py-2 rounded-full font-bold text-xs mb-4 uppercase tracking-[0.05em]"
+            className="inline-flex items-center gap-2 text-white px-4 py-2 rounded-full font-bold text-xs mb-4 uppercase tracking-wider"
             style={{
               background: "linear-gradient(135deg, #A78BFA 0%, #7C3AED 100%)",
               boxShadow: "rgba(124,58,237,0.3) 0px 0px 24px",
             }}
           >
             <Star size={14} className="fill-white text-white shrink-0" />
-            <span>&euro;0,99 FOR 14 DAYS</span>
+            <span>{badge}</span>
           </motion.div>
 
           <h1
             className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold leading-[1.1] text-gray-900 mb-3 tracking-tight"
             style={{ fontFamily: "'Bricolage Grotesque', sans-serif", fontWeight: 800 }}
           >
-            This resume builder gets you hired faster.
+            {title}
           </h1>
 
           <p
             className="text-sm md:text-base text-gray-700 font-medium max-w-xl leading-relaxed mb-6"
             style={{ fontFamily: "'Bricolage Grotesque', sans-serif" }}
           >
-            CV Labz builds your CV, scores your LinkedIn, matches you to any
-            vacancy, and writes your cover letter. All in one place.
+            {subtitle}
           </p>
 
           <p className="text-sm md:text-base font-bold text-gray-900 mb-3">
@@ -56,36 +82,30 @@ export default function HeroSection() {
             >
               &euro;0,99
             </span>
-            <span> unlocks everything for 14 days. Cancel in one click.</span>
+            <span> {priceText.replace("€0,99 ", "").replace("€0,99", "")}</span>
           </p>
 
-          <p className="text-xs text-gray-400 mb-6">
-            After that &euro;19,99/month. No emails, no friction.
-          </p>
+          <p className="text-xs text-gray-400 mb-6">{afterPrice}</p>
 
           <div className="flex flex-wrap items-center gap-4 mb-3">
             <div className="flex items-center gap-2">
               <div className="flex -space-x-2">
-                {[1, 2, 3, 4].map((i) => (
+                {avatars.map((src, i) => (
                   <img
                     key={i}
-                    src={`https://i.pravatar.cc/100?u=${i}`}
+                    src={src}
                     className="w-8 h-8 rounded-full border-3 border-white shadow-sm ring-1 ring-gray-100"
                     alt="User avatar"
                   />
                 ))}
               </div>
               <div className="flex items-center gap-1.5 text-xs font-bold text-gray-900">
-                <Star
-                  size={12}
-                  className="text-yellow-400 fill-yellow-400 shrink-0"
-                />
-                <span>4.8/5 from 2,300+ users</span>
+                <Star size={12} className="text-yellow-400 fill-yellow-400 shrink-0" />
+                <span>{trustText}</span>
               </div>
             </div>
           </div>
 
-          {/* Counter */}
           <div className="mb-4 flex items-center gap-2">
             <motion.span
               animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
@@ -95,24 +115,15 @@ export default function HeroSection() {
             />
             <span
               className="font-black leading-none tracking-tight"
-              style={{
-                fontSize: "36px",
-                color: "#4F46E5",
-                lineHeight: 1,
-                fontFamily: "'Bricolage Grotesque', sans-serif",
-              }}
+              style={{ fontSize: "36px", color: "#4F46E5", lineHeight: 1, fontFamily: "'Bricolage Grotesque', sans-serif" }}
             >
-              1,247
+              {counterNum}
             </span>
             <span
               className="font-medium text-gray-800 leading-none"
-              style={{
-                fontSize: "16px",
-                lineHeight: 1,
-                fontFamily: "'Bricolage Grotesque', sans-serif",
-              }}
+              style={{ fontSize: "16px", lineHeight: 1, fontFamily: "'Bricolage Grotesque', sans-serif" }}
             >
-              resumes created today
+              {counterLabel}
             </span>
           </div>
 
@@ -126,36 +137,27 @@ export default function HeroSection() {
                 boxShadow: "0px 8px 30px rgba(99,102,241,0.45)",
               }}
             >
-              <span>Start 14 days for &euro;0,99</span>
+              <span>{ctaText}</span>
               <ArrowRight size={18} />
             </motion.button>
             <button className="px-8 py-3.5 bg-white border-2 border-gray-100 text-gray-900 rounded-full font-extrabold text-base hover:border-gray-200 hover:bg-gray-50 transition-all">
-              Upload my resume
+              {secondaryCta}
             </button>
           </div>
 
           <p className="text-xs font-medium text-gray-500 flex items-center gap-3">
             <span className="flex items-center gap-1">
-              <Check
-                size={12}
-                className="text-emerald-500 shrink-0"
-                strokeWidth={3}
-              />
-              <span>No sign-up required</span>
+              <Check size={12} className="text-emerald-500 shrink-0" strokeWidth={3} />
+              <span>{noSignup}</span>
             </span>
             <span className="text-gray-300 select-none">&middot;</span>
             <span className="flex items-center gap-1">
-              <Check
-                size={12}
-                className="text-emerald-500 shrink-0"
-                strokeWidth={3}
-              />
-              <span>Cancel in one click</span>
+              <Check size={12} className="text-emerald-500 shrink-0" strokeWidth={3} />
+              <span>{cancelClick}</span>
             </span>
           </p>
         </motion.div>
 
-        {/* Image Cards Deck */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}

@@ -59,7 +59,7 @@ const CVMatcherMockup = () => {
           <span>How Well You Fit the Role of </span>
           <span className="font-black text-purple-600">Product Manager at Booking.com</span>
         </p>
-        <a href="#" className="text-[8px] text-blue-500 underline font-medium">
+        <a href="/cv-matching" className="text-[8px] text-blue-500 underline font-medium">
           Analyze Another CV
         </a>
       </div>

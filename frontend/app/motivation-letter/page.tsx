@@ -23,6 +23,10 @@ import {
 } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { useLanguage } from "@/lib/language";
+import { usePageContent } from "@/lib/usePageContent";
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -35,6 +39,8 @@ const stagger = {
 
 export default function MotivationLetterPage() {
   const [hoveredFeature, setHoveredFeature] = useState<number | null>(null);
+  const { lang } = useLanguage();
+  const { getField } = usePageContent("motivation-letter");
 
   const features = [
     {
@@ -186,16 +192,15 @@ export default function MotivationLetterPage() {
               <motion.div variants={fadeUp}>
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
                   <span className="bg-gradient-to-r from-slate-900 via-indigo-700 to-purple-700 bg-clip-text text-transparent">
-                    Craft Cover Letters That Get You Hired
+                    {getField("hero", "title", lang) || "Craft Cover Letters That Get You Hired"}
                   </span>
                 </h1>
                 <p className="mt-6 text-lg text-slate-600 leading-relaxed max-w-xl">
-                  Create role specific cover letters that clearly connect your
-                  experience to what employers are looking for.
+                  {getField("hero", "subtitle", lang) || "Create role specific cover letters that clearly connect your experience to what employers are looking for."}
                 </p>
                 <div className="mt-8">
                   <button className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-                    Create Your Cover Letter
+                    {getField("hero", "ctaText", lang) || "Create Your Cover Letter"}
                     <ArrowRight className="w-5 h-5" />
                   </button>
                 </div>
@@ -248,7 +253,7 @@ export default function MotivationLetterPage() {
               <motion.div variants={fadeUp}>
                 <span className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-700 rounded-full text-sm font-medium">
                   <Sparkles className="w-4 h-4" />
-                  Why Use Our Cover Letter Builder
+                  {getField("whyUse", "badge", lang) || "Why Use Our Cover Letter Builder"}
                 </span>
               </motion.div>
               <motion.h2
@@ -256,16 +261,14 @@ export default function MotivationLetterPage() {
                 className="mt-6 text-3xl sm:text-4xl lg:text-5xl font-bold"
               >
                 <span className="bg-gradient-to-r from-slate-900 via-indigo-700 to-purple-700 bg-clip-text text-transparent">
-                  Why Use Our Motivation Letter Builder?
+                  {getField("whyUse", "title", lang) || "Why Use Our Motivation Letter Builder?"}
                 </span>
               </motion.h2>
               <motion.p
                 variants={fadeUp}
                 className="mt-4 text-lg text-slate-600"
               >
-                Our motivation and cover letter builder is designed to help you
-                write clear, role-aligned motivation letters that make a strong
-                impression on hiring managers.
+                {getField("whyUse", "subtitle", lang) || "Our motivation and cover letter builder is designed to help you write clear, role-aligned motivation letters that make a strong impression on hiring managers."}
               </motion.p>
             </motion.div>
 
@@ -302,7 +305,7 @@ export default function MotivationLetterPage() {
                       {feature.description}
                     </p>
                     <a
-                      href="#"
+                      href="/login"
                       className="inline-flex items-center gap-1 mt-4 text-indigo-600 text-sm font-medium hover:text-indigo-800 transition-colors"
                     >
                       Learn more
@@ -358,7 +361,7 @@ export default function MotivationLetterPage() {
               <motion.div variants={fadeUp}>
                 <span className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-700 rounded-full text-sm font-medium">
                   <Sparkles className="w-4 h-4" />
-                  Simple 3-Step Process
+                  {getField("howItWorks", "badge", lang) || "Simple 3-Step Process"}
                 </span>
               </motion.div>
               <motion.h2
@@ -366,15 +369,14 @@ export default function MotivationLetterPage() {
                 className="mt-6 text-3xl sm:text-4xl lg:text-5xl font-bold"
               >
                 <span className="bg-gradient-to-r from-slate-900 via-indigo-700 to-purple-700 bg-clip-text text-transparent">
-                  How It Works
+                  {getField("howItWorks", "title", lang) || "How It Works"}
                 </span>
               </motion.h2>
               <motion.p
                 variants={fadeUp}
                 className="mt-4 text-lg text-slate-600"
               >
-                Create a professional cover letter in a few simple steps with
-                our AI-powered motivation letter builder.
+                {getField("howItWorks", "subtitle", lang) || "Create a professional cover letter in a few simple steps with our AI-powered motivation letter builder."}
               </motion.p>
             </motion.div>
 
@@ -473,16 +475,14 @@ export default function MotivationLetterPage() {
               <div className="inline-flex items-center space-x-3 bg-indigo-50 border border-indigo-200/50 rounded-full px-6 py-3 mb-8">
                 <Sparkles className="w-[18px] h-[18px] text-indigo-600" />
                 <span className="text-sm font-medium text-indigo-700">
-                  Smart Optimization Features
+                  {getField("aiSupport", "badge", lang) || "Smart Optimization Features"}
                 </span>
               </div>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-slate-900 via-indigo-700 to-purple-700 bg-clip-text text-transparent leading-tight max-w-4xl mx-auto">
-                Built on Structured, Practical AI Support
+                {getField("aiSupport", "title", lang) || "Built on Structured, Practical AI Support"}
               </h2>
               <p className="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed font-medium">
-                The platform combines guided AI assistance with proven writing
-                principles to help you create clear, role-aligned cover letters
-                for real job applications.
+                {getField("aiSupport", "subtitle", lang) || "The platform combines guided AI assistance with proven writing principles to help you create clear, role-aligned cover letters for real job applications."}
               </p>
             </motion.div>
 
@@ -543,7 +543,7 @@ export default function MotivationLetterPage() {
               <motion.div variants={fadeUp}>
                 <span className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-700 rounded-full text-sm font-medium">
                   <TrendingUp className="w-4 h-4" />
-                  Real Success Examples
+                  {getField("samples", "badge", lang) || "Real Success Examples"}
                 </span>
               </motion.div>
               <motion.h2
@@ -551,15 +551,14 @@ export default function MotivationLetterPage() {
                 className="mt-6 text-3xl sm:text-4xl lg:text-5xl font-bold"
               >
                 <span className="bg-gradient-to-r from-slate-900 via-indigo-700 to-purple-700 bg-clip-text text-transparent">
-                  Explore Sample Cover Letters
+                  {getField("samples", "title", lang) || "Explore Sample Cover Letters"}
                 </span>
               </motion.h2>
               <motion.p
                 variants={fadeUp}
                 className="mt-4 text-lg text-slate-600"
               >
-                See examples of role-specific cover letters created for
-                different industries and positions.
+                {getField("samples", "subtitle", lang) || "See examples of role-specific cover letters created for different industries and positions."}
               </motion.p>
             </motion.div>
 
@@ -657,10 +656,10 @@ export default function MotivationLetterPage() {
                   <Sparkles className="w-7 h-7 text-white" />
                 </div>
                 <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900 mb-6">
-                  Create Your Own Professional Cover Letter
+                  {getField("samplesCta", "title", lang) || "Create Your Own Professional Cover Letter"}
                 </h3>
                 <p className="text-lg md:text-xl text-slate-600 mb-8 md:mb-10 font-medium max-w-3xl mx-auto leading-relaxed">
-                  Build a role-specific cover letter with guided support designed for real job applications.
+                  {getField("samplesCta", "subtitle", lang) || "Build a role-specific cover letter with guided support designed for real job applications."}
                 </p>
                 <div className="grid grid-cols-3 gap-6 md:gap-8 mb-8 md:mb-10">
                   <div className="text-center">
@@ -678,7 +677,7 @@ export default function MotivationLetterPage() {
                 </div>
                 <a href="/dashboard">
                   <button className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 md:px-12 py-4 md:py-5 rounded-full text-lg md:text-xl font-bold hover:from-indigo-700 hover:to-purple-700 transition-all shadow-2xl hover:shadow-3xl inline-flex items-center gap-3">
-                    <span>Start Creating Now</span>
+                    <span>{getField("samplesCta", "ctaText", lang) || "Start Creating Now"}</span>
                     <ArrowRight className="w-6 h-6" />
                   </button>
                 </a>
@@ -698,10 +697,10 @@ export default function MotivationLetterPage() {
               transition={{ duration: 0.5 }}
             >
               <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
-                Feedback from Real Job Seekers
+                {getField("testimonials", "title", lang) || "Feedback from Real Job Seekers"}
               </h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-4">
-                Learn how clear, role-aligned cover letters helped candidates apply with confidence.
+                {getField("testimonials", "subtitle", lang) || "Learn how clear, role-aligned cover letters helped candidates apply with confidence."}
               </p>
               <div className="inline-flex items-center bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-gray-200">
                 <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
@@ -716,7 +715,7 @@ export default function MotivationLetterPage() {
                   role: "Marketingmanager",
                   title: "From invisible to shortlisted in 2 weeks",
                   quote: "The CV builder showed me exactly what recruiters look for. My response rate went from zero to four interviews.",
-                  thumbnail: "https://prod-api.cvlabz.com/video_thumbnails/testimonial_1121861370.png",
+                  thumbnail: `${API_BASE}/uploads/video-thumbnails/sarah-m-video.png`,
                   duration: "0:32",
                 },
                 {
@@ -724,7 +723,7 @@ export default function MotivationLetterPage() {
                   role: "Finance Graduate",
                   title: "Walked into my interview fully prepared",
                   quote: "The AI interview coach anticipated every question I got asked. I've never felt this confident walking into a final round",
-                  thumbnail: "https://prod-api.cvlabz.com/video_thumbnails/testimonial_1121861620.png",
+                  thumbnail: `${API_BASE}/uploads/video-thumbnails/emily-r-video.png`,
                   duration: "0:28",
                 },
                 {
@@ -732,7 +731,7 @@ export default function MotivationLetterPage() {
                   role: "Business Analyst",
                   title: "Cracked my case interview on the first try",
                   quote: "The business case simulations are frighteningly realistic. The AI feedback after each case made my structuring sharper every round",
-                  thumbnail: "https://prod-api.cvlabz.com/video_thumbnails/testimonial_1121861916.png",
+                  thumbnail: `${API_BASE}/uploads/video-thumbnails/laura-p-video.png`,
                   duration: "0:25",
                 },
               ].map((t, i) => (
@@ -783,14 +782,14 @@ export default function MotivationLetterPage() {
             >
               <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-8 lg:p-12 border border-gray-200 shadow-xl">
                 <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4">
-                  Ready to Write Your Perfect Cover Letter?
+                  {getField("testimonialsCta", "title", lang) || "Ready to Write Your Perfect Cover Letter?"}
                 </h3>
                 <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-                  Join thousands of professionals who landed job interviews through CV Labz.
+                  {getField("testimonialsCta", "subtitle", lang) || "Join thousands of professionals who landed job interviews through CV Labz."}
                 </p>
                 <a href="/dashboard">
                   <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-full text-lg font-semibold shadow-lg hover:shadow-xl transition-all">
-                    Create My Cover Letter Free
+                    {getField("testimonialsCta", "ctaText", lang) || "Create My Cover Letter Free"}
                   </button>
                 </a>
                 <p className="text-sm text-gray-500 mt-4">

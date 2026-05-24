@@ -1,106 +1,51 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import {
   CreditCard,
   TrendingUp,
   ArrowDownRight,
   DollarSign,
   Check,
+  Loader2,
 } from "lucide-react";
+import { api } from "@/lib/api";
 
-const stats = [
-  {
-    label: "Active Plans",
-    value: "3,241",
-    trend: "+8.2%",
-    trendUp: true,
-    icon: CreditCard,
-    iconColor: "text-purple-600",
-    iconBg: "bg-purple-50",
-  },
-  {
-    label: "Monthly Recurring",
-    value: "\u20ac48,392",
-    trend: "+15.3%",
-    trendUp: true,
-    icon: TrendingUp,
-    iconColor: "text-emerald-600",
-    iconBg: "bg-emerald-50",
-  },
-  {
-    label: "Churn Rate",
-    value: "2.1%",
-    trend: "-0.3%",
-    trendUp: false,
-    icon: ArrowDownRight,
-    iconColor: "text-red-600",
-    iconBg: "bg-red-50",
-  },
-  {
-    label: "Avg Revenue/User",
-    value: "\u20ac14.93",
-    trend: "+5.1%",
-    trendUp: true,
-    icon: DollarSign,
-    iconColor: "text-blue-600",
-    iconBg: "bg-blue-50",
-  },
-];
-
-const plans = [
-  {
-    name: "Free",
-    price: "\u20ac0",
-    users: "8,204 users",
-    stripe: "bg-gray-300",
-    features: ["Basic CV Builder", "1 Template", "PDF Export"],
-    popular: false,
-  },
-  {
-    name: "Pro",
-    price: "\u20ac9.99",
-    users: "2,841 users",
-    stripe: "bg-linear-to-r from-blue-500 to-purple-500",
-    features: ["All Tools", "Unlimited CVs", "AI Coach", "Priority Support"],
-    popular: true,
-  },
-  {
-    name: "Enterprise",
-    price: "\u20ac29.99",
-    users: "400 users",
-    stripe: "bg-linear-to-r from-purple-500 to-pink-500",
-    features: ["Everything in Pro", "Team Management", "Custom Branding", "Dedicated Support"],
-    popular: false,
-  },
-];
-
-type TxStatus = "Paid" | "Pending" | "Failed";
-
-interface Transaction {
-  customer: string;
-  plan: string;
-  amount: string;
-  status: TxStatus;
-  date: string;
-  gradient: string;
+interface SubscriptionData {
+  totalActive: number;
+  mrr: number;
+  churnRate: number;
+  arpu: number;
+  freePlan: number;
+  proPlan: number;
+  premiumPlan: number;
+  recentTransactions: Array<{
+    customer: string;
+    plan: string;
+    amount: number;
+    status: string;
+    date: string;
+  }>;
 }
 
-const transactions: Transaction[] = [
-  { customer: "Daan de Vries", plan: "Pro", amount: "\u20ac9.99", status: "Paid", date: "May 21, 2026", gradient: "from-blue-400 to-indigo-500" },
-  { customer: "Lisa van den Berg", plan: "Enterprise", amount: "\u20ac29.99", status: "Paid", date: "May 21, 2026", gradient: "from-purple-400 to-pink-500" },
-  { customer: "Sarah Chen", plan: "Pro", amount: "\u20ac9.99", status: "Pending", date: "May 20, 2026", gradient: "from-emerald-400 to-teal-500" },
-  { customer: "Marcus Johnson", plan: "Pro", amount: "\u20ac9.99", status: "Failed", date: "May 20, 2026", gradient: "from-amber-400 to-orange-500" },
-  { customer: "Emily Rodriguez", plan: "Enterprise", amount: "\u20ac29.99", status: "Paid", date: "May 19, 2026", gradient: "from-rose-400 to-red-500" },
-  { customer: "Jeroen Timmer", plan: "Pro", amount: "\u20ac9.99", status: "Paid", date: "May 19, 2026", gradient: "from-cyan-400 to-blue-500" },
-  { customer: "Sanne Verhoeven", plan: "Pro", amount: "\u20ac9.99", status: "Paid", date: "May 18, 2026", gradient: "from-violet-400 to-purple-500" },
-  { customer: "David Kim", plan: "Enterprise", amount: "\u20ac29.99", status: "Pending", date: "May 18, 2026", gradient: "from-sky-400 to-indigo-500" },
-];
+type TxStatus = "Paid" | "Pending" | "Failed";
 
 const txStatusStyles: Record<TxStatus, string> = {
   Paid: "bg-emerald-50 text-emerald-700",
   Pending: "bg-amber-50 text-amber-700",
   Failed: "bg-red-50 text-red-700",
 };
+
+const txGradients = [
+  "from-blue-400 to-indigo-500",
+  "from-purple-400 to-pink-500",
+  "from-emerald-400 to-teal-500",
+  "from-amber-400 to-orange-500",
+  "from-rose-400 to-red-500",
+  "from-cyan-400 to-blue-500",
+  "from-violet-400 to-purple-500",
+  "from-sky-400 to-indigo-500",
+];
 
 function getInitials(name: string) {
   return name
@@ -112,6 +57,84 @@ function getInitials(name: string) {
 }
 
 export default function SubscriptionsPage() {
+  const [data, setData] = useState<SubscriptionData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    api<{ success: boolean; data: SubscriptionData }>("/api/v1/admin/dashboard/subscriptions")
+      .then((res) => setData(res.data))
+      .catch((err) => console.error("Failed to fetch subscription data:", err))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <Loader2 className="h-8 w-8 animate-spin text-purple-500" />
+      </div>
+    );
+  }
+
+  const stats = data
+    ? [
+        {
+          label: "Active Plans",
+          value: data.totalActive.toLocaleString(),
+          icon: CreditCard,
+          iconColor: "text-purple-600",
+          iconBg: "bg-purple-50",
+        },
+        {
+          label: "Monthly Recurring",
+          value: `€${data.mrr.toLocaleString()}`,
+          icon: TrendingUp,
+          iconColor: "text-emerald-600",
+          iconBg: "bg-emerald-50",
+        },
+        {
+          label: "Churn Rate",
+          value: `${data.churnRate}%`,
+          icon: ArrowDownRight,
+          iconColor: "text-red-600",
+          iconBg: "bg-red-50",
+        },
+        {
+          label: "Avg Revenue/User",
+          value: `€${data.arpu.toFixed(2)}`,
+          icon: DollarSign,
+          iconColor: "text-blue-600",
+          iconBg: "bg-blue-50",
+        },
+      ]
+    : [];
+
+  const plans = [
+    {
+      name: "Free",
+      price: "€0",
+      users: `${(data?.freePlan ?? 0).toLocaleString()} users`,
+      stripe: "bg-gray-300",
+      features: ["Basic CV Builder", "1 Template", "PDF Export"],
+      popular: false,
+    },
+    {
+      name: "Pro",
+      price: "€9.99",
+      users: `${(data?.proPlan ?? 0).toLocaleString()} users`,
+      stripe: "bg-linear-to-r from-blue-500 to-purple-500",
+      features: ["All Tools", "Unlimited CVs", "AI Coach", "Priority Support"],
+      popular: true,
+    },
+    {
+      name: "Enterprise",
+      price: "€29.99",
+      users: `${(data?.premiumPlan ?? 0).toLocaleString()} users`,
+      stripe: "bg-linear-to-r from-purple-500 to-pink-500",
+      features: ["Everything in Pro", "Team Management", "Custom Branding", "Dedicated Support"],
+      popular: false,
+    },
+  ];
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -131,13 +154,6 @@ export default function SubscriptionsPage() {
               <div className={`${s.iconBg} rounded-xl p-2.5`}>
                 <s.icon className={`h-5 w-5 ${s.iconColor}`} />
               </div>
-              <span className={`text-xs font-medium px-2 py-1 rounded-lg ${
-                s.label === "Churn Rate"
-                  ? "bg-emerald-50 text-emerald-600"
-                  : "bg-emerald-50 text-emerald-600"
-              }`}>
-                {s.trend}
-              </span>
             </div>
             <p className="text-2xl font-bold text-gray-900">{s.value}</p>
             <p className="text-sm text-gray-500 mt-1">{s.label}</p>
@@ -202,24 +218,26 @@ export default function SubscriptionsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {transactions.map((t, i) => (
+              {data?.recentTransactions?.map((t, i) => (
                 <tr key={i} className="hover:bg-gray-50/50 transition-colors">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className={`w-9 h-9 rounded-xl bg-linear-to-br ${t.gradient} flex items-center justify-center text-white text-xs font-semibold shadow-sm`}>
+                      <div className={`w-9 h-9 rounded-xl bg-linear-to-br ${txGradients[i % txGradients.length]} flex items-center justify-center text-white text-xs font-semibold shadow-sm`}>
                         {getInitials(t.customer)}
                       </div>
                       <span className="font-medium text-gray-900">{t.customer}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4 text-gray-500">{t.plan}</td>
-                  <td className="px-6 py-4 font-medium text-gray-900">{t.amount}</td>
+                  <td className="px-6 py-4 font-medium text-gray-900">€{t.amount.toFixed(2)}</td>
                   <td className="px-6 py-4">
-                    <span className={`inline-block rounded-lg px-2.5 py-1 text-xs font-medium ${txStatusStyles[t.status]}`}>
+                    <span className={`inline-block rounded-lg px-2.5 py-1 text-xs font-medium ${txStatusStyles[t.status as TxStatus] || "bg-gray-50 text-gray-700"}`}>
                       {t.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-gray-500">{t.date}</td>
+                  <td className="px-6 py-4 text-gray-500">
+                    {new Date(t.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                  </td>
                 </tr>
               ))}
             </tbody>

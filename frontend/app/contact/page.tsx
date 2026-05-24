@@ -1,9 +1,52 @@
 "use client";
+import { useState } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { Mail, Phone, MapPin, MessageCircle } from "lucide-react";
+import { Mail, Phone, MapPin, MessageCircle, Loader2 } from "lucide-react";
+import { useLanguage } from "@/lib/language";
+import { usePageContent } from "@/lib/usePageContent";
+import { api } from "@/lib/api";
 
 export default function ContactPage() {
+  const { lang } = useLanguage();
+  const { getField } = usePageContent("contact");
+
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [subject, setSubject] = useState("");
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setSuccess("");
+    setError("");
+
+    try {
+      const res = await api<{ success: boolean; message: string }>(
+        "/api/v1/public/contact",
+        {
+          method: "POST",
+          body: { firstName, lastName, email, subject, message },
+        }
+      );
+      setSuccess(res.message);
+      setFirstName("");
+      setLastName("");
+      setEmail("");
+      setSubject("");
+      setMessage("");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 overflow-x-hidden pt-20">
       <Header />
@@ -11,14 +54,16 @@ export default function ContactPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-[1] tracking-tight mt-2 md:mt-3 font-extrabold">
-            <span className="text-black">Get in </span>
+            <span className="text-black">
+              {getField("hero", "title", lang) || "Get in "}
+            </span>
             <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Touch
+              {getField("hero", "titleHighlight", lang) || "Touch"}
             </span>
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mt-4">
-            Have questions about CV Labz? We&apos;re here to help you succeed in
-            your career journey.
+            {getField("hero", "subtitle", lang) ||
+              "Have questions about CV Labz? We're here to help you succeed in your career journey."}
           </p>
         </div>
 
@@ -35,11 +80,14 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                    Email
+                    {getField("contactInfo", "emailLabel", lang) || "Email"}
                   </h3>
-                  <p className="text-gray-600">connect@cvlabz.com</p>
+                  <p className="text-gray-600">
+                    {getField("contactInfo", "email", lang) || "connect@cvlabz.com"}
+                  </p>
                   <p className="text-sm text-gray-500">
-                    We typically respond within 24 hours
+                    {getField("contactInfo", "emailNote", lang) ||
+                      "We typically respond within 24 hours"}
                   </p>
                 </div>
               </div>
@@ -50,11 +98,14 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                    Phone
+                    {getField("contactInfo", "phoneLabel", lang) || "Phone"}
                   </h3>
-                  <p className="text-gray-600">+31 (0) 20 123 4567</p>
+                  <p className="text-gray-600">
+                    {getField("contactInfo", "phone", lang) || "+31 (0) 20 123 4567"}
+                  </p>
                   <p className="text-sm text-gray-500">
-                    Mon-Fri 9:00 AM - 6:00 PM CET
+                    {getField("contactInfo", "phoneNote", lang) ||
+                      "Mon-Fri 9:00 AM - 6:00 PM CET"}
                   </p>
                 </div>
               </div>
@@ -65,11 +116,14 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                    Office
+                    {getField("contactInfo", "addressLabel", lang) || "Office"}
                   </h3>
-                  <p className="text-gray-600">Den Haag, Netherlands</p>
+                  <p className="text-gray-600">
+                    {getField("contactInfo", "address", lang) || "Den Haag, Netherlands"}
+                  </p>
                   <p className="text-sm text-gray-500">
-                    Visit us by appointment
+                    {getField("contactInfo", "addressNote", lang) ||
+                      "Visit us by appointment"}
                   </p>
                 </div>
               </div>
@@ -80,11 +134,14 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                    Live Chat
+                    {getField("contactInfo", "chatLabel", lang) || "Live Chat"}
                   </h3>
-                  <p className="text-gray-600">Available on our website</p>
+                  <p className="text-gray-600">
+                    {getField("contactInfo", "chat", lang) || "Available on our website"}
+                  </p>
                   <p className="text-sm text-gray-500">
-                    Instant support during business hours
+                    {getField("contactInfo", "chatNote", lang) ||
+                      "Instant support during business hours"}
                   </p>
                 </div>
               </div>
@@ -96,9 +153,21 @@ export default function ContactPage() {
             <h2 className="text-2xl font-bold mb-6 text-gray-900">
               Send Message
             </h2>
+
+            {success && (
+              <div className="mb-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded-lg text-sm">
+                {success}
+              </div>
+            )}
+            {error && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
+                {error}
+              </div>
+            )}
+
             <form
               className="space-y-6"
-              onSubmit={(e) => e.preventDefault()}
+              onSubmit={handleSubmit}
             >
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
@@ -111,6 +180,8 @@ export default function ContactPage() {
                   <input
                     id="firstName"
                     required
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
                     placeholder="Your first name"
                     type="text"
@@ -126,6 +197,8 @@ export default function ContactPage() {
                   <input
                     id="lastName"
                     required
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
                     placeholder="Your last name"
                     type="text"
@@ -143,6 +216,8 @@ export default function ContactPage() {
                 <input
                   id="email"
                   required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
                   placeholder="your.email@example.com"
                   type="email"
@@ -159,6 +234,8 @@ export default function ContactPage() {
                 <select
                   id="subject"
                   required
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all outline-none"
                 >
                   <option value="">Select a subject</option>
@@ -181,6 +258,8 @@ export default function ContactPage() {
                   id="message"
                   rows={5}
                   required
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none outline-none"
                   placeholder="Tell us how we can help you..."
                 />
@@ -188,9 +267,11 @@ export default function ContactPage() {
 
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl"
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                Send Message
+                {loading && <Loader2 className="w-5 h-5 animate-spin" />}
+                {loading ? "Sending..." : "Send Message"}
               </button>
             </form>
           </div>

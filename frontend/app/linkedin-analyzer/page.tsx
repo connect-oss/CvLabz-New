@@ -20,11 +20,18 @@ import {
 } from "lucide-react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { useLanguage } from "@/lib/language";
+import { usePageContent } from "@/lib/usePageContent";
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
 
 /* ------------------------------------------------------------------ */
 /*  SECTION 1 — Hero                                                  */
 /* ------------------------------------------------------------------ */
 function HeroSection() {
+  const { lang } = useLanguage();
+  const { getField } = usePageContent("linkedin-analyzer");
+
   return (
     <section className="relative bg-gradient-to-b from-slate-50 to-blue-50 py-20 md:py-28 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -37,26 +44,22 @@ function HeroSection() {
             transition={{ duration: 0.6 }}
           >
             <span className="inline-block bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
-              LinkedIn Analyzer powered by CV Labz
+              {getField("hero", "badge", lang) || "LinkedIn Analyzer powered by CV Labz"}
             </span>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 leading-tight mb-6">
-              Optimize Your LinkedIn Profile for{" "}
-              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Recruiters &amp; Algorithms
-              </span>
+              {getField("hero", "title", lang) || <>Optimize Your LinkedIn Profile for{" "}<span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Recruiters &amp; Algorithms</span></>}
             </h1>
 
             <p className="text-lg text-gray-600 mb-8 max-w-xl">
-              Get AI-powered insights to make your LinkedIn profile irresistible
-              to recruiters. Free analysis in under 2 minutes.
+              {getField("hero", "subtitle", lang) || "Get AI-powered insights to make your LinkedIn profile irresistible to recruiters. Free analysis in under 2 minutes."}
             </p>
 
             <a
-              href="#"
+              href="/login"
               className="inline-block bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold text-lg px-12 py-6 rounded-full shadow-lg hover:shadow-xl transition-shadow"
             >
-              Analyze My Profile – It&apos;s Free
+              {getField("hero", "ctaText", lang) || "Analyze My Profile – It's Free"}
             </a>
 
             <div className="flex flex-wrap gap-8 mt-10">
@@ -222,6 +225,8 @@ const reportFeatures = [
 
 function ReimaginedSection() {
   const [activeCard, setActiveCard] = useState(0);
+  const { lang } = useLanguage();
+  const { getField } = usePageContent("linkedin-analyzer");
 
   return (
     <section className="bg-gradient-to-b from-white to-gray-50 py-20 md:py-28">
@@ -234,10 +239,10 @@ function ReimaginedSection() {
           transition={{ duration: 0.5 }}
         >
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-black via-gray-800 to-purple-600 bg-clip-text text-transparent mb-4">
-            Your LinkedIn Profile, Reimagined
+            {getField("reimagined", "title", lang) || "Your LinkedIn Profile, Reimagined"}
           </h2>
           <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
-            See exactly how our AI analyzes your profile and provides actionable insights to help you stand out to recruiters and optimize for LinkedIn&apos;s algorithm
+            {getField("reimagined", "subtitle", lang) || "See exactly how our AI analyzes your profile and provides actionable insights to help you stand out to recruiters and optimize for LinkedIn's algorithm"}
           </p>
         </motion.div>
 
@@ -372,7 +377,7 @@ function ReimaginedSection() {
             </div>
 
             <a
-              href="#"
+              href="/login"
               className="inline-block mt-8 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold px-10 py-4 rounded-full shadow-lg hover:shadow-xl transition-shadow"
             >
               Get My Free Analysis
@@ -433,6 +438,9 @@ const advancedFeatures = [
 ];
 
 function ComprehensiveSection() {
+  const { lang } = useLanguage();
+  const { getField } = usePageContent("linkedin-analyzer");
+
   return (
     <section className="bg-gradient-to-b from-gray-50 to-blue-50 py-20 md:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -444,10 +452,10 @@ function ComprehensiveSection() {
           transition={{ duration: 0.5 }}
         >
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-black via-gray-800 to-green-600 bg-clip-text text-transparent mb-4">
-            Comprehensive LinkedIn Profile Analysis
+            {getField("comprehensive", "title", lang) || "Comprehensive LinkedIn Profile Analysis"}
           </h2>
           <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
-            Our AI-powered analysis examines every aspect of your LinkedIn profile to help you optimize for recruiters and LinkedIn&apos;s algorithm
+            {getField("comprehensive", "subtitle", lang) || "Our AI-powered analysis examines every aspect of your LinkedIn profile to help you optimize for recruiters and LinkedIn's algorithm"}
           </p>
         </motion.div>
 
@@ -633,6 +641,9 @@ const benefits = [
 ];
 
 function TransformSection() {
+  const { lang } = useLanguage();
+  const { getField } = usePageContent("linkedin-analyzer");
+
   return (
     <section
       className="py-20 md:py-28"
@@ -650,18 +661,13 @@ function TransformSection() {
           transition={{ duration: 0.5 }}
         >
           <span className="inline-block bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
-            Why LinkedIn Optimization Matters
+            {getField("transform", "badge", lang) || "Why LinkedIn Optimization Matters"}
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900">
-            Transform Your
-            <br />
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Professional Presence
-            </span>
+            {getField("transform", "title", lang) || <>Transform Your<br /><span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Professional Presence</span></>}
           </h2>
           <p className="text-lg text-gray-600 mt-4 max-w-2xl mx-auto">
-            Unlock the full potential of your LinkedIn profile with data-driven
-            optimization that gets you noticed by the right people
+            {getField("transform", "subtitle", lang) || "Unlock the full potential of your LinkedIn profile with data-driven optimization that gets you noticed by the right people"}
           </p>
         </motion.div>
 
@@ -727,8 +733,7 @@ const testimonials = [
     title: "From invisible to shortlisted in 2 weeks",
     quote:
       "The CV builder showed me exactly what recruiters look for. My response rate went from zero to four interviews.",
-    thumbnail:
-      "https://prod-api.cvlabz.com/video_thumbnails/testimonial_1121861370.png",
+    thumbnail: `${API_BASE}/uploads/video-thumbnails/sarah-m-video.png`,
     duration: "0:32",
   },
   {
@@ -737,8 +742,7 @@ const testimonials = [
     title: "Walked into my interview fully prepared",
     quote:
       "The AI interview coach anticipated every question I got asked. I've never felt this confident walking into a final round",
-    thumbnail:
-      "https://prod-api.cvlabz.com/video_thumbnails/testimonial_1121861620.png",
+    thumbnail: `${API_BASE}/uploads/video-thumbnails/emily-r-video.png`,
     duration: "0:28",
   },
   {
@@ -747,13 +751,15 @@ const testimonials = [
     title: "Cracked my case interview on the first try",
     quote:
       "The business case simulations are frighteningly realistic. The AI feedback after each case made my structuring sharper every round",
-    thumbnail:
-      "https://prod-api.cvlabz.com/video_thumbnails/testimonial_1121861916.png",
+    thumbnail: `${API_BASE}/uploads/video-thumbnails/laura-p-video.png`,
     duration: "0:25",
   },
 ];
 
 function TestimonialsSection() {
+  const { lang } = useLanguage();
+  const { getField } = usePageContent("linkedin-analyzer");
+
   return (
     <section className="py-24 bg-gradient-to-br from-blue-50 via-white to-purple-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -765,11 +771,10 @@ function TestimonialsSection() {
           transition={{ duration: 0.5 }}
         >
           <h2 className="text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
-            Real Results from Real Professionals
+            {getField("testimonials", "title", lang) || "Real Results from Real Professionals"}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-4">
-            See how our LinkedIn analyzer helped professionals boost their
-            career visibility
+            {getField("testimonials", "subtitle", lang) || "See how our LinkedIn analyzer helped professionals boost their career visibility"}
           </p>
           <div className="inline-flex items-center bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-gray-200">
             <CircleCheckBig className="w-4 h-4 text-green-500 mr-2" />
@@ -866,6 +871,9 @@ function TestimonialsSection() {
 /*  3 STEPS                                                           */
 /* ------------------------------------------------------------------ */
 function StepsSection() {
+  const { lang } = useLanguage();
+  const { getField } = usePageContent("linkedin-analyzer");
+
   const steps = [
     {
       num: "01",
@@ -895,11 +903,10 @@ function StepsSection() {
           transition={{ duration: 0.5 }}
         >
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-black via-gray-800 to-blue-600 bg-clip-text text-transparent mb-4">
-            How to Analyze Your LinkedIn in 3 Simple Steps
+            {getField("steps", "title", lang) || "How to Analyze Your LinkedIn in 3 Simple Steps"}
           </h2>
           <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
-            Get professional insights into your LinkedIn profile optimization in
-            minutes
+            {getField("steps", "subtitle", lang) || "Get professional insights into your LinkedIn profile optimization in minutes"}
           </p>
         </motion.div>
 
@@ -994,6 +1001,9 @@ const otherTools = [
 ];
 
 function OtherToolsSection() {
+  const { lang } = useLanguage();
+  const { getField } = usePageContent("linkedin-analyzer");
+
   return (
     <section className="py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-gray-50 to-blue-50">
       <div className="max-w-7xl mx-auto">
@@ -1005,10 +1015,10 @@ function OtherToolsSection() {
           transition={{ duration: 0.5 }}
         >
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-black via-gray-800 to-purple-600 bg-clip-text text-transparent mb-4">
-            Other Tools to Supercharge Your Application
+            {getField("otherTools", "title", lang) || "Other Tools to Supercharge Your Application"}
           </h2>
           <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
-            Complete your job search toolkit with our comprehensive suite of career tools
+            {getField("otherTools", "subtitle", lang) || "Complete your job search toolkit with our comprehensive suite of career tools"}
           </p>
         </motion.div>
 
@@ -1066,6 +1076,8 @@ const faqs = [
 
 function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const { lang } = useLanguage();
+  const { getField } = usePageContent("linkedin-analyzer");
 
   return (
     <section className="py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 lg:px-8">
@@ -1078,10 +1090,10 @@ function FAQSection() {
           transition={{ duration: 0.5 }}
         >
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold bg-gradient-to-r from-black via-gray-800 to-green-600 bg-clip-text text-transparent mb-4">
-            Frequently Asked Questions
+            {getField("faq", "title", lang) || "Frequently Asked Questions"}
           </h2>
           <p className="text-lg sm:text-xl text-gray-600">
-            Everything you need to know about our free LinkedIn profile analysis
+            {getField("faq", "subtitle", lang) || "Everything you need to know about our free LinkedIn profile analysis"}
           </p>
         </motion.div>
 
@@ -1133,6 +1145,9 @@ function FAQSection() {
 /*  FINAL CTA                                                         */
 /* ------------------------------------------------------------------ */
 function FinalCTASection() {
+  const { lang } = useLanguage();
+  const { getField } = usePageContent("linkedin-analyzer");
+
   return (
     <section className="py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700">
       <div className="max-w-4xl mx-auto text-center">
@@ -1143,15 +1158,14 @@ function FinalCTASection() {
           transition={{ duration: 0.5 }}
         >
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-4 sm:mb-6">
-            Ready to Make Your LinkedIn Work for You?
+            {getField("finalCta", "title", lang) || "Ready to Make Your LinkedIn Work for You?"}
           </h2>
           <p className="text-lg sm:text-xl md:text-2xl text-blue-100 mb-8 sm:mb-12 max-w-3xl mx-auto">
-            Join thousands of professionals who&apos;ve optimized their LinkedIn
-            profiles with our AI-powered analysis
+            {getField("finalCta", "subtitle", lang) || "Join thousands of professionals who've optimized their LinkedIn profiles with our AI-powered analysis"}
           </p>
           <a href="/dashboard">
             <button className="bg-white text-blue-600 px-8 sm:px-12 py-4 sm:py-6 rounded-full font-bold text-lg sm:text-xl shadow-2xl hover:shadow-3xl transition-all duration-300">
-              Start Your Free Analysis
+              {getField("finalCta", "ctaText", lang) || "Start Your Free Analysis"}
             </button>
           </a>
         </motion.div>

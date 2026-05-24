@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import {
   Users,
   CreditCard,
@@ -8,46 +9,28 @@ import {
   ArrowUpRight,
   Calendar,
   ChevronDown,
+  Loader2,
 } from "lucide-react";
+import { api } from "@/lib/api";
 
-const stats = [
-  {
-    label: "Total Users",
-    value: "12,847",
-    trend: "+12.5%",
-    trendLabel: "from last month",
-    icon: Users,
-    iconBg: "bg-blue-50",
-    iconColor: "text-blue-600",
-  },
-  {
-    label: "Active Subscriptions",
-    value: "3,241",
-    trend: "+8.2%",
-    trendLabel: "from last month",
-    icon: CreditCard,
-    iconBg: "bg-purple-50",
-    iconColor: "text-purple-600",
-  },
-  {
-    label: "Monthly Revenue",
-    value: "\u20ac48,392",
-    trend: "+15.3%",
-    trendLabel: "from last month",
-    icon: DollarSign,
-    iconBg: "bg-emerald-50",
-    iconColor: "text-emerald-600",
-  },
-  {
-    label: "New Signups",
-    value: "842",
-    trend: "+23.1%",
-    trendLabel: "this month",
-    icon: UserPlus,
-    iconBg: "bg-amber-50",
-    iconColor: "text-amber-600",
-  },
-];
+interface DashboardData {
+  totalUsers: number;
+  activeSubscriptions: number;
+  monthlyRevenue: number;
+  newSignups: number;
+  planCounts: Record<string, number>;
+  recentSignups: Array<{
+    name: string;
+    email: string;
+    userType: string;
+    createdAt: string;
+  }>;
+  recentActivity: Array<{
+    name: string;
+    email: string;
+    updatedAt: string;
+  }>;
+}
 
 const popularTools = [
   { name: "CV Builder", pct: 78, barColor: "bg-blue-500" },
@@ -57,70 +40,92 @@ const popularTools = [
   { name: "Assessments", pct: 28, barColor: "bg-pink-500" },
 ];
 
-const recentActivity = [
-  {
-    name: "Sarah Chen",
-    email: "sarah.chen@gmail.com",
-    initials: "SC",
-    gradient: "from-blue-500 to-purple-600",
-    action: "Upgraded to Pro",
-    date: "2 hours ago",
-    status: "Completed",
-    statusStyle: "bg-emerald-50 text-emerald-700",
-  },
-  {
-    name: "Marcus Johnson",
-    email: "marcus.j@outlook.com",
-    initials: "MJ",
-    gradient: "from-emerald-500 to-teal-600",
-    action: "Created new CV",
-    date: "3 hours ago",
-    status: "Active",
-    statusStyle: "bg-blue-50 text-blue-700",
-  },
-  {
-    name: "Emily Rodriguez",
-    email: "emily.rod@yahoo.com",
-    initials: "ER",
-    gradient: "from-purple-500 to-pink-600",
-    action: "LinkedIn analysis",
-    date: "5 hours ago",
-    status: "Completed",
-    statusStyle: "bg-emerald-50 text-emerald-700",
-  },
-  {
-    name: "David Kim",
-    email: "david.kim@company.co",
-    initials: "DK",
-    gradient: "from-amber-500 to-orange-600",
-    action: "Downloaded CV",
-    date: "6 hours ago",
-    status: "Completed",
-    statusStyle: "bg-emerald-50 text-emerald-700",
-  },
-  {
-    name: "Lisa Thompson",
-    email: "lisa.t@web.de",
-    initials: "LT",
-    gradient: "from-pink-500 to-rose-600",
-    action: "Started free trial",
-    date: "8 hours ago",
-    status: "Pending",
-    statusStyle: "bg-amber-50 text-amber-700",
-  },
-  {
-    name: "James Wilson",
-    email: "j.wilson@hotmail.com",
-    initials: "JW",
-    gradient: "from-cyan-500 to-blue-600",
-    action: "Subscription cancelled",
-    date: "12 hours ago",
-    status: "Cancelled",
-    statusStyle: "bg-red-50 text-red-700",
-  },
+const gradients = [
+  "from-blue-500 to-purple-600",
+  "from-emerald-500 to-teal-600",
+  "from-purple-500 to-pink-600",
+  "from-amber-500 to-orange-600",
+  "from-pink-500 to-rose-600",
+  "from-cyan-500 to-blue-600",
 ];
 
+function getInitials(name: string) {
+  return name
+    .split(" ")
+    .map((w) => w[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+}
+
+function timeAgo(dateString: string): string {
+  const now = new Date();
+  const date = new Date(dateString);
+  const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+  if (seconds < 60) return "just now";
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes} minute${minutes !== 1 ? "s" : ""} ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours} hour${hours !== 1 ? "s" : ""} ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days} day${days !== 1 ? "s" : ""} ago`;
+  const months = Math.floor(days / 30);
+  return `${months} month${months !== 1 ? "s" : ""} ago`;
+}
+
 export default function AdminDashboard() {
+  const [data, setData] = useState<DashboardData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    api<{ success: boolean; data: DashboardData }>("/api/v1/admin/dashboard/stats")
+      .then((res) => setData(res.data))
+      .catch((err) => console.error("Failed to fetch dashboard stats:", err))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+      </div>
+    );
+  }
+
+  const stats = data
+    ? [
+        {
+          label: "Total Users",
+          value: data.totalUsers.toLocaleString(),
+          icon: Users,
+          iconBg: "bg-blue-50",
+          iconColor: "text-blue-600",
+        },
+        {
+          label: "Active Subscriptions",
+          value: data.activeSubscriptions.toLocaleString(),
+          icon: CreditCard,
+          iconBg: "bg-purple-50",
+          iconColor: "text-purple-600",
+        },
+        {
+          label: "Monthly Revenue",
+          value: `€${data.monthlyRevenue.toLocaleString()}`,
+          icon: DollarSign,
+          iconBg: "bg-emerald-50",
+          iconColor: "text-emerald-600",
+        },
+        {
+          label: "New Signups",
+          value: data.newSignups.toLocaleString(),
+          icon: UserPlus,
+          iconBg: "bg-amber-50",
+          iconColor: "text-amber-600",
+        },
+      ]
+    : [];
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -154,13 +159,6 @@ export default function AdminDashboard() {
             </div>
             <p className="text-sm text-gray-500 font-medium">{s.label}</p>
             <p className="text-2xl font-bold text-gray-900 mt-1">{s.value}</p>
-            <div className="inline-flex items-center gap-1 mt-2 text-xs font-medium text-emerald-600">
-              <ArrowUpRight className="h-3.5 w-3.5" />
-              {s.trend}
-              <span className="text-gray-400 font-normal ml-0.5">
-                {s.trendLabel}
-              </span>
-            </div>
           </div>
         ))}
       </div>
@@ -284,18 +282,15 @@ export default function AdminDashboard() {
                   User
                 </th>
                 <th className="px-6 py-3 text-xs font-medium text-gray-400 uppercase tracking-wider">
-                  Action
+                  Type
                 </th>
                 <th className="px-6 py-3 text-xs font-medium text-gray-400 uppercase tracking-wider">
-                  Date
-                </th>
-                <th className="px-6 py-3 text-xs font-medium text-gray-400 uppercase tracking-wider">
-                  Status
+                  Joined
                 </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              {recentActivity.map((u) => (
+              {data?.recentSignups?.map((u, i) => (
                 <tr
                   key={u.email}
                   className="hover:bg-gray-50/50 transition-colors"
@@ -303,10 +298,10 @@ export default function AdminDashboard() {
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <div
-                        className={`w-8 h-8 rounded-full bg-linear-to-br ${u.gradient} flex items-center justify-center shrink-0`}
+                        className={`w-8 h-8 rounded-full bg-linear-to-br ${gradients[i % gradients.length]} flex items-center justify-center shrink-0`}
                       >
                         <span className="text-xs font-medium text-white">
-                          {u.initials}
+                          {getInitials(u.name)}
                         </span>
                       </div>
                       <div>
@@ -315,14 +310,21 @@ export default function AdminDashboard() {
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-gray-600">{u.action}</td>
-                  <td className="px-6 py-4 text-gray-400">{u.date}</td>
                   <td className="px-6 py-4">
                     <span
-                      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${u.statusStyle}`}
+                      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                        u.userType === "premium"
+                          ? "bg-purple-50 text-purple-700"
+                          : u.userType === "pro"
+                          ? "bg-blue-50 text-blue-700"
+                          : "bg-gray-50 text-gray-700"
+                      }`}
                     >
-                      {u.status}
+                      {u.userType}
                     </span>
+                  </td>
+                  <td className="px-6 py-4 text-gray-400">
+                    {timeAgo(u.createdAt)}
                   </td>
                 </tr>
               ))}

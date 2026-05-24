@@ -1,3 +1,5 @@
+'use client';
+
 import Header from '@/components/layout/Header';
 import HeroSection from '@/components/hero/HeroSection';
 import TemplatesSection from '@/components/sections/TemplatesSection';
@@ -9,8 +11,15 @@ import LearningHub from '@/components/sections/LearningHub';
 import RealResultsWall from '@/components/sections/RealResultsWall';
 import PricingSection from '@/components/sections/PricingSection';
 import Footer from '@/components/layout/Footer';
+import { useLanguage } from '@/lib/language';
+import { usePageContent } from '@/lib/usePageContent';
 
 export default function Home() {
+  const { lang } = useLanguage();
+  const { getField } = usePageContent("homepage");
+
+  const analyzerTitle = getField("analyzerMatcher", "title", lang) || "Find out why recruiters skip your profile. Free.";
+  const analyzerSubtitle = getField("analyzerMatcher", "subtitle", lang) || "Two free reports that show you exactly what is holding your LinkedIn and CV back. Get yours in your inbox in 60 seconds.";
   return (
     <div className="min-h-screen bg-white selection:bg-blue-100 selection:text-blue-900 overflow-x-hidden pt-20">
       <Header />
@@ -28,14 +37,13 @@ export default function Home() {
         >
           <div className="text-center">
             <h2 className="text-5xl font-extrabold text-gray-900 mb-6 tracking-tight">
-              Find out why recruiters skip your profile. Free.
+              {analyzerTitle}
             </h2>
             <p
               className="text-xl text-gray-500 font-bold max-w-2xl mx-auto"
               style={{ marginBottom: '64px' }}
             >
-              Two free reports that show you exactly what is holding your
-              LinkedIn and CV back. Get yours in your inbox in 60 seconds.
+              {analyzerSubtitle}
             </p>
           </div>
 

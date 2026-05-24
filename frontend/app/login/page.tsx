@@ -241,7 +241,7 @@ function LoginContent() {
                     Password
                   </label>
                   {!isSignUp && (
-                    <a href="#" className="text-xs font-bold text-blue-600 hover:text-blue-700">
+                    <a href="/forgot-password" className="text-xs font-bold text-blue-600 hover:text-blue-700">
                       Forgot password?
                     </a>
                   )}

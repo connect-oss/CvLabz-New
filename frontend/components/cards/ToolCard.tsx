@@ -34,7 +34,7 @@ const ToolCard = ({
       </div>
     </div>
     <a
-      href="#"
+      href="/login"
       className="flex items-center gap-2 font-extrabold text-blue-600 hover:gap-3 transition-all"
     >
       {linkText} <ArrowRight size={18} />

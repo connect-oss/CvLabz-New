@@ -3,10 +3,11 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
-      { protocol: 'https', hostname: 'i.pravatar.cc' },
-      { protocol: 'https', hostname: 'images.unsplash.com' },
+      { protocol: 'http', hostname: 'localhost' },
+      { protocol: 'https', hostname: 'prod-api.cvlabz.com' },
+      { protocol: 'https', hostname: 'cvlabz.com' },
     ],
-    unoptimized: true,
+    unoptimized: true, // Using <img> tags currently — switch to next/image incrementally
   },
   async redirects() {
     return [
