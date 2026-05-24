@@ -8,10 +8,12 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { api } from "@/lib/api";
 import { useLanguage } from "@/lib/language";
+import { usePageContent } from "@/lib/usePageContent";
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const { getField } = usePageContent("forgot-password");
   const [step, setStep] = useState<"email" | "reset">("email");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -68,12 +70,14 @@ export default function ForgotPasswordPage() {
               <KeyRound className="h-7 w-7 text-white" />
             </div>
             <h1 className="text-2xl font-extrabold text-gray-900">
-              {step === "email" ? t("Forgot your password?", "Wachtwoord vergeten?") : t("Reset your password", "Wachtwoord resetten")}
+              {step === "email"
+                ? (getField("step1", "heading", lang) || t("Forgot your password?", "Wachtwoord vergeten?"))
+                : (getField("step2", "heading", lang) || t("Reset your password", "Wachtwoord resetten"))}
             </h1>
             <p className="text-sm text-gray-500 mt-2">
               {step === "email"
-                ? t("Enter your email and we'll send you a reset code.", "Voer je e-mailadres in en we sturen je een resetcode.")
-                : t("Enter the 6-digit code sent to your email and your new password.", "Voer de 6-cijferige code in die naar je e-mail is gestuurd en je nieuwe wachtwoord.")}
+                ? (getField("step1", "subheading", lang) || t("Enter your email and we'll send you a reset code.", "Voer je e-mailadres in en we sturen je een resetcode."))
+                : (getField("step2", "subheading", lang) || t("Enter the 6-digit code sent to your email and your new password.", "Voer de 6-cijferige code in die naar je e-mail is gestuurd en je nieuwe wachtwoord."))}
             </p>
           </div>
 
@@ -88,7 +92,7 @@ export default function ForgotPasswordPage() {
             <form onSubmit={handleEmailSubmit} className="space-y-5">
               <div>
                 <label htmlFor="email" className="block text-sm font-bold text-gray-700 mb-1.5">
-                  {t("Email address", "E-mailadres")}
+                  {getField("shared", "emailLabel", lang) || t("Email address", "E-mailadres")}
                 </label>
                 <div className="relative">
                   <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -113,7 +117,7 @@ export default function ForgotPasswordPage() {
                   <Loader2 size={18} className="animate-spin" />
                 ) : (
                   <>
-                    {t("Send reset code", "Verstuur resetcode")}
+                    {getField("step1", "submitButton", lang) || t("Send reset code", "Verstuur resetcode")}
                     <ArrowRight size={16} />
                   </>
                 )}
@@ -123,7 +127,7 @@ export default function ForgotPasswordPage() {
             <form onSubmit={handleResetSubmit} className="space-y-5">
               <div>
                 <label htmlFor="otp" className="block text-sm font-bold text-gray-700 mb-1.5">
-                  {t("Reset code", "Resetcode")}
+                  {getField("step2", "codeLabel", lang) || t("Reset code", "Resetcode")}
                 </label>
                 <input
                   id="otp"
@@ -132,14 +136,14 @@ export default function ForgotPasswordPage() {
                   maxLength={6}
                   value={otp}
                   onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
-                  placeholder={t("Enter 6-digit code", "Voer 6-cijferige code in")}
+                  placeholder={getField("step2", "codePlaceholder", lang) || t("Enter 6-digit code", "Voer 6-cijferige code in")}
                   className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-gray-900 font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-center text-lg tracking-[0.3em]"
                 />
               </div>
 
               <div>
                 <label htmlFor="newPassword" className="block text-sm font-bold text-gray-700 mb-1.5">
-                  {t("New password", "Nieuw wachtwoord")}
+                  {getField("step2", "passwordLabel", lang) || t("New password", "Nieuw wachtwoord")}
                 </label>
                 <div className="relative">
                   <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -149,7 +153,7 @@ export default function ForgotPasswordPage() {
                     required
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder={t("Enter new password", "Voer nieuw wachtwoord in")}
+                    placeholder={getField("step2", "passwordPlaceholder", lang) || t("Enter new password", "Voer nieuw wachtwoord in")}
                     className="w-full bg-white border border-gray-200 rounded-xl pl-11 pr-12 py-3 text-gray-900 font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                   />
                   <button
@@ -171,7 +175,7 @@ export default function ForgotPasswordPage() {
                   <Loader2 size={18} className="animate-spin" />
                 ) : (
                   <>
-                    {t("Reset password", "Wachtwoord resetten")}
+                    {getField("step2", "submitButton", lang) || t("Reset password", "Wachtwoord resetten")}
                     <ArrowRight size={16} />
                   </>
                 )}
@@ -182,7 +186,7 @@ export default function ForgotPasswordPage() {
                 onClick={() => { setStep("email"); setError(""); setOtp(""); setNewPassword(""); }}
                 className="w-full text-sm text-gray-500 font-medium hover:text-gray-700 transition-colors"
               >
-                {t("Didn't receive a code? Try again", "Geen code ontvangen? Probeer opnieuw")}
+                {getField("step2", "retryLink", lang) || t("Didn't receive a code? Try again", "Geen code ontvangen? Probeer opnieuw")}
               </button>
             </form>
           )}
@@ -194,7 +198,7 @@ export default function ForgotPasswordPage() {
               className="inline-flex items-center gap-1.5 text-sm font-bold text-gray-500 hover:text-gray-700 transition-colors"
             >
               <ArrowLeft className="h-4 w-4" />
-              {t("Back to login", "Terug naar inloggen")}
+              {getField("shared", "backToLogin", lang) || t("Back to login", "Terug naar inloggen")}
             </Link>
           </div>
         </div>

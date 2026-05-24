@@ -8,6 +8,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { api, getGoogleAuthUrl } from "@/lib/api";
 import { useLanguage } from "@/lib/language";
+import { usePageContent } from "@/lib/usePageContent";
 
 export default function LoginPage() {
   return (
@@ -20,7 +21,8 @@ export default function LoginPage() {
 function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const { getField, getItems } = usePageContent("login");
   const [showPassword, setShowPassword] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -86,13 +88,13 @@ function LoginContent() {
           <div className="relative z-10 space-y-8">
             <div>
               <h1 className="text-4xl xl:text-5xl font-extrabold text-white leading-tight tracking-tight mb-4">
-                {t("Build the CV that", "Bouw het CV dat")}
+                {getField("branding", "headingLine1", lang) || t("Build the CV that", "Bouw het CV dat")}
                 <span className="block bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                  {t("gets you hired.", "je aan een baan helpt.")}
+                  {getField("branding", "headingLine2", lang) || t("gets you hired.", "je aan een baan helpt.")}
                 </span>
               </h1>
               <p className="text-gray-400 font-medium text-lg max-w-md leading-relaxed">
-                {t(
+                {getField("branding", "subheading", lang) || t(
                   "Join thousands of professionals using AI-powered tools to land their dream job.",
                   "Sluit je aan bij duizenden professionals die AI-tools gebruiken om hun droombaan te vinden."
                 )}
@@ -100,38 +102,44 @@ function LoginContent() {
             </div>
 
             <div className="space-y-4">
-              {[
-                t("AI-powered CV builder & scorer", "AI-aangedreven CV-bouwer & scorer"),
-                t("LinkedIn profile analyzer", "LinkedIn-profiel analyzer"),
-                t("Job match scoring in seconds", "Baanmatch-score in seconden"),
-                t("ATS-friendly templates", "ATS-vriendelijke sjablonen"),
-              ].map((feature) => (
-                <div key={feature} className="flex items-center gap-3">
-                  <div className="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
-                    <Check size={13} className="text-emerald-400" strokeWidth={3} />
+              {(() => {
+                const cmsItems = getItems("branding", lang);
+                const features = cmsItems.length > 0
+                  ? cmsItems.map((item) => item.text || item.label || "")
+                  : [
+                      t("AI-powered CV builder & scorer", "AI-aangedreven CV-bouwer & scorer"),
+                      t("LinkedIn profile analyzer", "LinkedIn-profiel analyzer"),
+                      t("Job match scoring in seconds", "Baanmatch-score in seconden"),
+                      t("ATS-friendly templates", "ATS-vriendelijke sjablonen"),
+                    ];
+                return features.map((feature) => (
+                  <div key={feature} className="flex items-center gap-3">
+                    <div className="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
+                      <Check size={13} className="text-emerald-400" strokeWidth={3} />
+                    </div>
+                    <span className="text-gray-300 font-medium text-sm">
+                      {feature}
+                    </span>
                   </div>
-                  <span className="text-gray-300 font-medium text-sm">
-                    {feature}
-                  </span>
-                </div>
-              ))}
+                ));
+              })()}
             </div>
           </div>
 
           <div className="relative z-10 bg-white/5 border border-white/10 rounded-xl p-5">
             <p className="text-gray-300 text-sm leading-relaxed mb-3">
-              &ldquo;{t(
+              &ldquo;{getField("branding", "testimonialQuote", lang) || t(
                 "I went from zero callbacks to 4 interviews in two weeks. The AI feedback was a game-changer.",
                 "Ik ging van nul reacties naar 4 sollicitatiegesprekken in twee weken. De AI-feedback was een doorbraak."
               )}&rdquo;
             </p>
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-xs font-bold">
-                SM
+                {getField("branding", "testimonialInitials", lang) || "SM"}
               </div>
               <div>
-                <p className="text-white text-xs font-bold">Sarah M.</p>
-                <p className="text-gray-500 text-xs">Marketing Manager</p>
+                <p className="text-white text-xs font-bold">{getField("branding", "testimonialName", lang) || "Sarah M."}</p>
+                <p className="text-gray-500 text-xs">{getField("branding", "testimonialRole", lang) || t("Marketing Manager", "Marketing Manager")}</p>
               </div>
             </div>
           </div>
@@ -155,7 +163,7 @@ function LoginContent() {
                     : "text-gray-500 hover:text-gray-700"
                 }`}
               >
-                {t("Sign in", "Inloggen")}
+                {getField("signIn", "tabLabel", lang) || t("Sign in", "Inloggen")}
               </button>
               <button
                 onClick={() => { setIsSignUp(true); setError(""); }}
@@ -165,17 +173,19 @@ function LoginContent() {
                     : "text-gray-500 hover:text-gray-700"
                 }`}
               >
-                {t("Create account", "Account aanmaken")}
+                {getField("signUp", "tabLabel", lang) || t("Create account", "Account aanmaken")}
               </button>
             </div>
 
             <h2 className="text-2xl font-extrabold text-gray-900 mb-2">
-              {isSignUp ? t("Create your account", "Maak je account aan") : t("Welcome back", "Welkom terug")}
+              {isSignUp
+                ? (getField("signUp", "heading", lang) || t("Create your account", "Maak je account aan"))
+                : (getField("signIn", "heading", lang) || t("Welcome back", "Welkom terug"))}
             </h2>
             <p className="text-gray-500 font-medium mb-8">
               {isSignUp
-                ? t("Start building your career with CV Labz.", "Begin je carri\u00e8re met CV Labz.")
-                : t("Sign in to continue to your dashboard.", "Log in om naar je dashboard te gaan.")}
+                ? (getField("signUp", "subheading", lang) || t("Start building your career with CV Labz.", "Begin je carri\u00e8re met CV Labz."))
+                : (getField("signIn", "subheading", lang) || t("Sign in to continue to your dashboard.", "Log in om naar je dashboard te gaan."))}
             </p>
 
             {/* Error message */}
@@ -196,13 +206,13 @@ function LoginContent() {
                 <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05" />
                 <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
               </svg>
-              <span>{t("Continue with Google", "Doorgaan met Google")}</span>
+              <span>{getField("shared", "googleButton", lang) || t("Continue with Google", "Doorgaan met Google")}</span>
             </button>
 
             {/* Divider */}
             <div className="flex items-center gap-4 my-6">
               <div className="flex-1 h-px bg-gray-200" />
-              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">{t("or", "of")}</span>
+              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">{getField("shared", "divider", lang) || t("or", "of")}</span>
               <div className="flex-1 h-px bg-gray-200" />
             </div>
 
@@ -211,7 +221,7 @@ function LoginContent() {
               {isSignUp && (
                 <div>
                   <label className="block text-sm font-bold text-gray-700 mb-1.5">
-                    {t("Full name", "Volledige naam")}
+                    {getField("signUp", "nameLabel", lang) || t("Full name", "Volledige naam")}
                   </label>
                   <input
                     type="text"
@@ -226,7 +236,7 @@ function LoginContent() {
 
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-1.5">
-                  {t("Email address", "E-mailadres")}
+                  {getField("shared", "emailLabel", lang) || t("Email address", "E-mailadres")}
                 </label>
                 <div className="relative">
                   <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -244,11 +254,11 @@ function LoginContent() {
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="block text-sm font-bold text-gray-700">
-                    {t("Password", "Wachtwoord")}
+                    {getField("shared", "passwordLabel", lang) || t("Password", "Wachtwoord")}
                   </label>
                   {!isSignUp && (
                     <a href="/forgot-password" className="text-xs font-bold text-blue-600 hover:text-blue-700">
-                      {t("Forgot password?", "Wachtwoord vergeten?")}
+                      {getField("signIn", "forgotPassword", lang) || t("Forgot password?", "Wachtwoord vergeten?")}
                     </a>
                   )}
                 </div>
@@ -259,7 +269,7 @@ function LoginContent() {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder={t("Enter your password", "Voer je wachtwoord in")}
+                    placeholder={getField("shared", "passwordPlaceholder", lang) || t("Enter your password", "Voer je wachtwoord in")}
                     className="w-full bg-white border border-gray-200 rounded-xl pl-11 pr-12 py-3 text-gray-900 font-medium placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                   />
                   <button
@@ -281,7 +291,9 @@ function LoginContent() {
                   <Loader2 size={18} className="animate-spin" />
                 ) : (
                   <>
-                    {isSignUp ? t("Create account", "Account aanmaken") : t("Sign in", "Inloggen")}
+                    {isSignUp
+                      ? (getField("signUp", "submitButton", lang) || t("Create account", "Account aanmaken"))
+                      : (getField("signIn", "submitButton", lang) || t("Sign in", "Inloggen"))}
                     <ArrowRight size={16} />
                   </>
                 )}
@@ -291,21 +303,25 @@ function LoginContent() {
             {/* Terms */}
             {isSignUp && (
               <p className="text-xs text-gray-400 font-medium mt-4 text-center leading-relaxed">
-                {t("By creating an account, you agree to our", "Door een account aan te maken ga je akkoord met onze")}{" "}
-                <Link href="/tos" className="text-blue-600 hover:underline">{t("Terms of Service", "Algemene Voorwaarden")}</Link>{" "}
-                {t("and", "en")}{" "}
-                <Link href="/privacy-policy" className="text-blue-600 hover:underline">{t("Privacy Policy", "Privacybeleid")}</Link>.
+                {getField("signUp", "termsPrefix", lang) || t("By creating an account, you agree to our", "Door een account aan te maken ga je akkoord met onze")}{" "}
+                <Link href="/tos" className="text-blue-600 hover:underline">{getField("signUp", "termsLink", lang) || t("Terms of Service", "Algemene Voorwaarden")}</Link>{" "}
+                {getField("shared", "and", lang) || t("and", "en")}{" "}
+                <Link href="/privacy-policy" className="text-blue-600 hover:underline">{getField("signUp", "privacyLink", lang) || t("Privacy Policy", "Privacybeleid")}</Link>.
               </p>
             )}
 
             {/* Bottom switch */}
             <p className="text-sm text-gray-500 font-medium text-center mt-8">
-              {isSignUp ? t("Already have an account?", "Heb je al een account?") : t("Don\u2019t have an account?", "Heb je nog geen account?")}{" "}
+              {isSignUp
+                ? (getField("signUp", "switchPrompt", lang) || t("Already have an account?", "Heb je al een account?"))
+                : (getField("signIn", "switchPrompt", lang) || t("Don\u2019t have an account?", "Heb je nog geen account?"))}{" "}
               <button
                 onClick={() => { setIsSignUp(!isSignUp); setError(""); }}
                 className="text-blue-600 font-bold hover:underline"
               >
-                {isSignUp ? t("Sign in", "Inloggen") : t("Create one", "Maak er een")}
+                {isSignUp
+                  ? (getField("signUp", "switchLink", lang) || t("Sign in", "Inloggen"))
+                  : (getField("signIn", "switchLink", lang) || t("Create one", "Maak er een"))}
               </button>
             </p>
           </motion.div>

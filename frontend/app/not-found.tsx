@@ -4,9 +4,11 @@ import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { useLanguage } from "@/lib/language";
+import { usePageContent } from "@/lib/usePageContent";
 
 export default function NotFound() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const { getField } = usePageContent("not-found");
 
   return (
     <div className="min-h-screen flex flex-col pt-20">
@@ -24,10 +26,10 @@ export default function NotFound() {
             404
           </h1>
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-            {t("Page not found", "Pagina niet gevonden")}
+            {getField("content", "heading", lang) || t("Page not found", "Pagina niet gevonden")}
           </h2>
           <p className="text-gray-500 font-medium mb-8 leading-relaxed">
-            {t(
+            {getField("content", "description", lang) || t(
               "The page you're looking for doesn't exist or has been moved. Let's get you back on track.",
               "De pagina die je zoekt bestaat niet of is verplaatst. Laten we je weer op weg helpen."
             )}
@@ -37,13 +39,13 @@ export default function NotFound() {
               href="/"
               className="px-8 py-3.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full font-bold hover:opacity-90 transition-all shadow-lg"
             >
-              {t("Back to Home", "Terug naar Home")}
+              {getField("content", "homeButton", lang) || t("Back to Home", "Terug naar Home")}
             </Link>
             <Link
               href="/contact"
               className="px-8 py-3.5 bg-white border-2 border-gray-200 text-gray-700 rounded-full font-bold hover:bg-gray-50 transition-all"
             >
-              {t("Contact Support", "Contact Opnemen")}
+              {getField("content", "contactButton", lang) || t("Contact Support", "Contact Opnemen")}
             </Link>
           </div>
         </div>

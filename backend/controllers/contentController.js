@@ -12,6 +12,15 @@ const PAGE_LABELS = {
   'motivation-letter': 'Motivation Letter',
   contact: 'Contact',
   global: 'Global (Header/Footer)',
+  'tos': 'Terms of Service',
+  'privacy-policy': 'Privacy Policy',
+  'cookie-policy': 'Cookie Policy',
+  'login': 'Login / Sign Up',
+  'forgot-password': 'Forgot Password',
+  'admin-login': 'Admin Login',
+  'blogs-page': 'Blog Listing',
+  'dashboard-page': 'User Dashboard',
+  'not-found': '404 Page',
 };
 
 function getDefaultSections(pageKey) {
@@ -724,6 +733,172 @@ function getDefaultSections(pageKey) {
         { sectionKey: 'sharedCta', sectionLabel: 'Shared CTA Texts', sectionType: 'global', fields: [
           { key: 'trialCtaText', type: 'text', label: 'Trial CTA Text', value_en: 'Start 14 days for €0,99', value_nl: 'Start 14 dagen voor €0,99' },
           { key: 'uploadCtaText', type: 'text', label: 'Upload CTA Text', value_en: 'Upload my resume', value_nl: 'Upload mijn CV' },
+        ]},
+      ];
+
+    /* ================================================================
+       TERMS OF SERVICE
+       ================================================================ */
+    case 'tos':
+      return [
+        { sectionKey: 'hero', sectionLabel: 'Page Header', sectionType: 'hero', fields: [
+          { key: 'title', type: 'text', label: 'Title', value_en: 'Terms of Service', value_nl: 'Algemene Voorwaarden' },
+          { key: 'effectiveDate', type: 'text', label: 'Effective Date', value_en: '28 May 2025', value_nl: '28 mei 2025' },
+        ]},
+        { sectionKey: 'content', sectionLabel: 'Legal Content', sectionType: 'text', fields: [
+          { key: 'body', type: 'richtext', label: 'Full Content (EN)', value_en: '', value_nl: '' },
+        ]},
+      ];
+
+    /* ================================================================
+       PRIVACY POLICY
+       ================================================================ */
+    case 'privacy-policy':
+      return [
+        { sectionKey: 'hero', sectionLabel: 'Page Header', sectionType: 'hero', fields: [
+          { key: 'title', type: 'text', label: 'Title', value_en: 'Privacy Policy', value_nl: 'Privacybeleid' },
+          { key: 'effectiveDate', type: 'text', label: 'Effective Date', value_en: '28 May 2025', value_nl: '28 mei 2025' },
+        ]},
+        { sectionKey: 'content', sectionLabel: 'Legal Content', sectionType: 'text', fields: [
+          { key: 'body', type: 'richtext', label: 'Full Content', value_en: '', value_nl: '' },
+        ]},
+      ];
+
+    /* ================================================================
+       COOKIE POLICY
+       ================================================================ */
+    case 'cookie-policy':
+      return [
+        { sectionKey: 'hero', sectionLabel: 'Page Header', sectionType: 'hero', fields: [
+          { key: 'title', type: 'text', label: 'Title', value_en: 'Cookie Policy', value_nl: 'Cookiebeleid' },
+        ]},
+        { sectionKey: 'content', sectionLabel: 'Content', sectionType: 'text', fields: [
+          { key: 'body', type: 'richtext', label: 'Full Content', value_en: '', value_nl: '' },
+        ]},
+      ];
+
+    /* ================================================================
+       LOGIN / SIGN UP
+       ================================================================ */
+    case 'login':
+      return [
+        { sectionKey: 'signIn', sectionLabel: 'Sign In Tab', sectionType: 'text', fields: [
+          { key: 'tabLabel', type: 'text', label: 'Tab Label', value_en: 'Sign in', value_nl: 'Inloggen' },
+          { key: 'heading', type: 'text', label: 'Heading', value_en: 'Welcome back', value_nl: 'Welkom terug' },
+          { key: 'subtitle', type: 'text', label: 'Subtitle', value_en: 'Sign in to continue to your dashboard.', value_nl: 'Log in om naar je dashboard te gaan.' },
+          { key: 'googleButton', type: 'text', label: 'Google Button', value_en: 'Continue with Google', value_nl: 'Doorgaan met Google' },
+          { key: 'forgotPassword', type: 'text', label: 'Forgot Password Link', value_en: 'Forgot password?', value_nl: 'Wachtwoord vergeten?' },
+          { key: 'submitButton', type: 'text', label: 'Submit Button', value_en: 'Sign in', value_nl: 'Inloggen' },
+          { key: 'switchText', type: 'text', label: 'Switch Text', value_en: "Don't have an account?", value_nl: 'Heb je nog geen account?' },
+          { key: 'switchLink', type: 'text', label: 'Switch Link', value_en: 'Create one', value_nl: 'Maak er een' },
+        ]},
+        { sectionKey: 'signUp', sectionLabel: 'Sign Up Tab', sectionType: 'text', fields: [
+          { key: 'tabLabel', type: 'text', label: 'Tab Label', value_en: 'Create account', value_nl: 'Account aanmaken' },
+          { key: 'heading', type: 'text', label: 'Heading', value_en: 'Create your account', value_nl: 'Maak je account aan' },
+          { key: 'subtitle', type: 'text', label: 'Subtitle', value_en: 'Start building your career with CV Labz.', value_nl: 'Begin je carrière met CV Labz.' },
+          { key: 'nameLabel', type: 'text', label: 'Name Label', value_en: 'Full name', value_nl: 'Volledige naam' },
+          { key: 'submitButton', type: 'text', label: 'Submit Button', value_en: 'Create account', value_nl: 'Account aanmaken' },
+          { key: 'switchText', type: 'text', label: 'Switch Text', value_en: 'Already have an account?', value_nl: 'Heb je al een account?' },
+          { key: 'switchLink', type: 'text', label: 'Switch Link', value_en: 'Sign in', value_nl: 'Inloggen' },
+          { key: 'termsText', type: 'text', label: 'Terms Text', value_en: 'By creating an account, you agree to our', value_nl: 'Door een account aan te maken ga je akkoord met onze' },
+        ]},
+        { sectionKey: 'shared', sectionLabel: 'Shared Labels', sectionType: 'text', fields: [
+          { key: 'emailLabel', type: 'text', label: 'Email Label', value_en: 'Email address', value_nl: 'E-mailadres' },
+          { key: 'passwordLabel', type: 'text', label: 'Password Label', value_en: 'Password', value_nl: 'Wachtwoord' },
+          { key: 'passwordPlaceholder', type: 'text', label: 'Password Placeholder', value_en: 'Enter your password', value_nl: 'Voer je wachtwoord in' },
+          { key: 'or', type: 'text', label: 'Divider Text', value_en: 'or', value_nl: 'of' },
+        ]},
+        { sectionKey: 'branding', sectionLabel: 'Left Panel Branding', sectionType: 'text', fields: [
+          { key: 'title', type: 'text', label: 'Title', value_en: 'Build the CV that gets you hired.', value_nl: 'Bouw het CV dat je aan een baan helpt.' },
+          { key: 'subtitle', type: 'text', label: 'Subtitle', value_en: 'Join thousands of professionals using AI-powered tools to land their dream job.', value_nl: 'Sluit je aan bij duizenden professionals die AI-tools gebruiken om hun droombaan te vinden.' },
+        ], items: [
+          { text: 'AI-powered CV builder & scorer' },
+          { text: 'LinkedIn profile analyzer' },
+          { text: 'Job match scoring in seconds' },
+          { text: 'ATS-friendly templates' },
+        ], items_nl: [
+          { text: 'AI-aangedreven CV-bouwer & scorer' },
+          { text: 'LinkedIn profiel analyzer' },
+          { text: 'Baan-matching in seconden' },
+          { text: 'ATS-vriendelijke sjablonen' },
+        ]},
+      ];
+
+    /* ================================================================
+       FORGOT PASSWORD
+       ================================================================ */
+    case 'forgot-password':
+      return [
+        { sectionKey: 'step1', sectionLabel: 'Step 1 - Email', sectionType: 'text', fields: [
+          { key: 'title', type: 'text', label: 'Title', value_en: 'Forgot Password', value_nl: 'Wachtwoord Vergeten' },
+          { key: 'subtitle', type: 'text', label: 'Subtitle', value_en: 'Enter your email and we\'ll send you a reset code.', value_nl: 'Voer je e-mail in en we sturen je een resetcode.' },
+          { key: 'emailLabel', type: 'text', label: 'Email Label', value_en: 'Email address', value_nl: 'E-mailadres' },
+          { key: 'submitButton', type: 'text', label: 'Submit Button', value_en: 'Send Reset Code', value_nl: 'Verstuur Resetcode' },
+        ]},
+        { sectionKey: 'step2', sectionLabel: 'Step 2 - Reset', sectionType: 'text', fields: [
+          { key: 'title', type: 'text', label: 'Title', value_en: 'Reset Password', value_nl: 'Wachtwoord Resetten' },
+          { key: 'subtitle', type: 'text', label: 'Subtitle', value_en: 'Enter the code sent to your email and your new password.', value_nl: 'Voer de code in die naar je e-mail is gestuurd en je nieuwe wachtwoord.' },
+          { key: 'codeLabel', type: 'text', label: 'Code Label', value_en: 'Reset Code', value_nl: 'Resetcode' },
+          { key: 'passwordLabel', type: 'text', label: 'Password Label', value_en: 'New Password', value_nl: 'Nieuw Wachtwoord' },
+          { key: 'submitButton', type: 'text', label: 'Submit Button', value_en: 'Reset Password', value_nl: 'Wachtwoord Resetten' },
+        ]},
+        { sectionKey: 'shared', sectionLabel: 'Shared', sectionType: 'text', fields: [
+          { key: 'backToLogin', type: 'text', label: 'Back Link', value_en: 'Back to login', value_nl: 'Terug naar inloggen' },
+          { key: 'tryAgain', type: 'text', label: 'Try Again', value_en: 'Try again', value_nl: 'Probeer opnieuw' },
+        ]},
+      ];
+
+    /* ================================================================
+       ADMIN LOGIN
+       ================================================================ */
+    case 'admin-login':
+      return [
+        { sectionKey: 'form', sectionLabel: 'Login Form', sectionType: 'text', fields: [
+          { key: 'title', type: 'text', label: 'Panel Title', value_en: 'Admin Panel', value_nl: 'Beheerderspaneel' },
+          { key: 'emailLabel', type: 'text', label: 'Email Label', value_en: 'Email', value_nl: 'E-mail' },
+          { key: 'passwordLabel', type: 'text', label: 'Password Label', value_en: 'Password', value_nl: 'Wachtwoord' },
+          { key: 'passwordPlaceholder', type: 'text', label: 'Password Placeholder', value_en: 'Enter your password', value_nl: 'Voer je wachtwoord in' },
+          { key: 'submitButton', type: 'text', label: 'Submit Button', value_en: 'Sign in', value_nl: 'Inloggen' },
+          { key: 'backLink', type: 'text', label: 'Back Link', value_en: 'Back to website', value_nl: 'Terug naar website' },
+        ]},
+      ];
+
+    /* ================================================================
+       BLOG LISTING
+       ================================================================ */
+    case 'blogs-page':
+      return [
+        { sectionKey: 'hero', sectionLabel: 'Page Header', sectionType: 'hero', fields: [
+          { key: 'title', type: 'text', label: 'Title', value_en: 'Blog', value_nl: 'Blog' },
+          { key: 'subtitle', type: 'text', label: 'Subtitle', value_en: 'Career tips, CV advice, and expert insights', value_nl: 'Carrièretips, CV-advies en deskundige inzichten' },
+        ]},
+        { sectionKey: 'comingSoon', sectionLabel: 'Coming Soon', sectionType: 'text', fields: [
+          { key: 'title', type: 'text', label: 'Title', value_en: "We're working on bringing you the best career content.", value_nl: 'We werken aan de beste carrière-inhoud voor je.' },
+          { key: 'subtitle', type: 'text', label: 'Subtitle', value_en: 'Check back soon for articles, guides, and expert tips.', value_nl: 'Kom binnenkort terug voor artikelen, gidsen en tips.' },
+        ]},
+      ];
+
+    /* ================================================================
+       USER DASHBOARD
+       ================================================================ */
+    case 'dashboard-page':
+      return [
+        { sectionKey: 'comingSoon', sectionLabel: 'Coming Soon', sectionType: 'text', fields: [
+          { key: 'title', type: 'text', label: 'Title', value_en: 'Dashboard Coming Soon', value_nl: 'Dashboard Binnenkort Beschikbaar' },
+          { key: 'subtitle', type: 'text', label: 'Subtitle', value_en: "We're building your personal career dashboard. Check back soon!", value_nl: 'We bouwen aan je persoonlijke carrière-dashboard. Kom snel terug!' },
+        ]},
+      ];
+
+    /* ================================================================
+       404 PAGE
+       ================================================================ */
+    case 'not-found':
+      return [
+        { sectionKey: 'content', sectionLabel: '404 Content', sectionType: 'text', fields: [
+          { key: 'title', type: 'text', label: 'Title', value_en: 'Page not found', value_nl: 'Pagina niet gevonden' },
+          { key: 'subtitle', type: 'text', label: 'Subtitle', value_en: "The page you're looking for doesn't exist or has been moved. Let's get you back on track.", value_nl: 'De pagina die je zoekt bestaat niet of is verplaatst. Laten we je weer op weg helpen.' },
+          { key: 'homeButton', type: 'text', label: 'Home Button', value_en: 'Back to Home', value_nl: 'Terug naar Home' },
+          { key: 'contactButton', type: 'text', label: 'Contact Button', value_en: 'Contact Support', value_nl: 'Contact Opnemen' },
         ]},
       ];
 
