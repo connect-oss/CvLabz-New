@@ -46,6 +46,10 @@ interface SeoData {
   metaTitle_nl: string;
   metaDescription_en: string;
   metaDescription_nl: string;
+  metaKeywords_en: string;
+  metaKeywords_nl: string;
+  canonical: string;
+  ogImage: string;
 }
 
 interface PageData {
@@ -83,6 +87,10 @@ export default function ContentEditorPage() {
     metaTitle_nl: "",
     metaDescription_en: "",
     metaDescription_nl: "",
+    metaKeywords_en: "",
+    metaKeywords_nl: "",
+    canonical: "",
+    ogImage: "",
   });
   const [lang, setLang] = useState<"en" | "nl">("en");
   const [openSections, setOpenSections] = useState<Set<string>>(new Set());
@@ -105,6 +113,10 @@ export default function ContentEditorPage() {
             metaTitle_nl: data.seo.metaTitle_nl || "",
             metaDescription_en: data.seo.metaDescription_en || "",
             metaDescription_nl: data.seo.metaDescription_nl || "",
+            metaKeywords_en: data.seo.metaKeywords_en || "",
+            metaKeywords_nl: data.seo.metaKeywords_nl || "",
+            canonical: data.seo.canonical || "",
+            ogImage: data.seo.ogImage || "",
           });
         }
         // Open first section by default
@@ -727,6 +739,48 @@ export default function ContentEditorPage() {
             placeholder="Meta description..."
             className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
           />
+        </div>
+
+        <div>
+          <label className="text-sm font-medium text-gray-700 mb-1 block">Meta Keywords</label>
+          <input
+            type="text"
+            value={lang === "en" ? seo.metaKeywords_en : seo.metaKeywords_nl}
+            onChange={(e) =>
+              setSeo((prev) => ({
+                ...prev,
+                [lang === "en" ? "metaKeywords_en" : "metaKeywords_nl"]: e.target.value,
+              }))
+            }
+            placeholder="keyword1, keyword2, keyword3..."
+            className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+          <p className="text-xs text-gray-400 mt-1">Comma-separated keywords</p>
+        </div>
+
+        <div>
+          <label className="text-sm font-medium text-gray-700 mb-1 block">Canonical URL</label>
+          <input
+            type="text"
+            value={seo.canonical}
+            onChange={(e) => setSeo((prev) => ({ ...prev, canonical: e.target.value }))}
+            placeholder="https://cvlabz.com/page-url"
+            className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
+        <div>
+          <label className="text-sm font-medium text-gray-700 mb-1 block">OG Image URL</label>
+          <input
+            type="text"
+            value={seo.ogImage}
+            onChange={(e) => setSeo((prev) => ({ ...prev, ogImage: e.target.value }))}
+            placeholder="https://cvlabz.com/og-image.jpg"
+            className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+          {seo.ogImage && (
+            <img src={seo.ogImage} alt="OG Preview" className="mt-2 h-20 rounded-lg border border-gray-200 object-cover" />
+          )}
         </div>
       </div>
     </div>

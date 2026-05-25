@@ -13,6 +13,7 @@ import {
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { useLanguage } from "@/lib/language";
+import DynamicSEO from '@/components/DynamicSEO';
 import { usePageContent } from "@/lib/usePageContent";
 
 interface FaqItem {
@@ -112,7 +113,7 @@ const defaultFaqCategories: FaqCategory[] = [
 export default function FaqsPage() {
   const [openId, setOpenId] = useState<string | null>(null);
   const { lang } = useLanguage();
-  const { getField, getItems } = usePageContent("faqs");
+  const { getField, getItems, seo, } = usePageContent("faqs");
 
   const toggle = (id: string) => {
     setOpenId((prev) => (prev === id ? null : id));
@@ -139,6 +140,7 @@ export default function FaqsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 overflow-x-hidden pt-20">
+      <DynamicSEO seo={seo} />
       <Header />
 
       {/* Hero Section */}

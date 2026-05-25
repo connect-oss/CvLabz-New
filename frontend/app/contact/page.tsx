@@ -4,12 +4,13 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Mail, Phone, MapPin, MessageCircle, Loader2 } from "lucide-react";
 import { useLanguage } from "@/lib/language";
+import DynamicSEO from '@/components/DynamicSEO';
 import { usePageContent } from "@/lib/usePageContent";
 import { api } from "@/lib/api";
 
 export default function ContactPage() {
   const { lang } = useLanguage();
-  const { getField } = usePageContent("contact");
+  const { getField, seo, } = usePageContent("contact");
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -49,6 +50,7 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 overflow-x-hidden pt-20">
+      <DynamicSEO seo={seo} />
       <Header />
       <main className="mx-auto max-w-5xl px-4 py-16">
         {/* Header */}

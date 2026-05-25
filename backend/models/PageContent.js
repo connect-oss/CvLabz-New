@@ -26,6 +26,10 @@ const pageContentSchema = new mongoose.Schema({
     metaTitle_nl: { type: String, default: '' },
     metaDescription_en: { type: String, default: '' },
     metaDescription_nl: { type: String, default: '' },
+    metaKeywords_en: { type: String, default: '' },
+    metaKeywords_nl: { type: String, default: '' },
+    canonical: { type: String, default: '' },
+    ogImage: { type: String, default: '' },
   },
   updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 }, { timestamps: true });

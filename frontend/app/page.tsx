@@ -13,15 +13,17 @@ import PricingSection from '@/components/sections/PricingSection';
 import Footer from '@/components/layout/Footer';
 import { useLanguage } from '@/lib/language';
 import { usePageContent } from '@/lib/usePageContent';
+import DynamicSEO from '@/components/DynamicSEO';
 
 export default function Home() {
   const { lang } = useLanguage();
-  const { getField } = usePageContent("homepage");
+  const { getField, seo } = usePageContent("homepage");
 
   const analyzerTitle = getField("analyzerMatcher", "title", lang) || "Find out why recruiters skip your profile. Free.";
   const analyzerSubtitle = getField("analyzerMatcher", "subtitle", lang) || "Two free reports that show you exactly what is holding your LinkedIn and CV back. Get yours in your inbox in 60 seconds.";
   return (
     <div className="min-h-screen bg-white selection:bg-blue-100 selection:text-blue-900 overflow-x-hidden pt-20">
+      <DynamicSEO seo={seo} fallbackTitle="CV Labz — AI Resume Builder" fallbackDescription="Build your CV, score your LinkedIn, match to any vacancy, and write your cover letter." />
       <Header />
       <HeroSection />
       <div id="templates">

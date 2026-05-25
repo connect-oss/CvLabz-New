@@ -25,6 +25,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { useLanguage } from "@/lib/language";
 import { usePageContent } from "@/lib/usePageContent";
+import DynamicSEO from "@/components/DynamicSEO";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
 
@@ -40,7 +41,7 @@ const stagger = {
 export default function MotivationLetterPage() {
   const [hoveredFeature, setHoveredFeature] = useState<number | null>(null);
   const { lang } = useLanguage();
-  const { getField } = usePageContent("motivation-letter");
+  const { getField, seo } = usePageContent("motivation-letter");
 
   const features = [
     {
@@ -176,6 +177,7 @@ export default function MotivationLetterPage() {
 
   return (
     <>
+      <DynamicSEO seo={seo} />
       <Header />
       <main className="min-h-screen bg-white overflow-x-hidden pt-20">
         {/* HERO SECTION */}

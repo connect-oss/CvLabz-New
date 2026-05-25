@@ -3,6 +3,7 @@
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { useLanguage } from "@/lib/language";
+import DynamicSEO from '@/components/DynamicSEO';
 import { usePageContent } from "@/lib/usePageContent";
 import { motion } from "framer-motion";
 import {
@@ -136,7 +137,7 @@ const testimonials = [
 
 export default function CVMatcherPage() {
   const { lang } = useLanguage();
-  const { getField } = usePageContent("cv-matching");
+  const { getField, seo, } = usePageContent("cv-matching");
 
   // Hero
   const heroTitle = getField("hero", "title", lang) || "Match Your CV to Any Job in Seconds";
@@ -161,6 +162,7 @@ export default function CVMatcherPage() {
 
   return (
     <div className="min-h-screen bg-white overflow-x-hidden pt-20">
+      <DynamicSEO seo={seo} />
       <Header />
 
       {/* Section 1: Hero */}

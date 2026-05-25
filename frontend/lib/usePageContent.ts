@@ -29,6 +29,10 @@ interface PageData {
     metaTitle_nl: string;
     metaDescription_en: string;
     metaDescription_nl: string;
+    metaKeywords_en: string;
+    metaKeywords_nl: string;
+    canonical: string;
+    ogImage: string;
   };
 }
 
@@ -78,5 +82,7 @@ export function usePageContent(pageKey: string) {
     return `${API_BASE}${val}`;
   }
 
-  return { data, loading, getField, getItems, getImage };
+  const seo = data?.seo || null;
+
+  return { data, loading, seo, getField, getItems, getImage };
 }

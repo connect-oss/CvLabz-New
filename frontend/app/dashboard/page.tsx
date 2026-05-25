@@ -7,6 +7,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { api } from "@/lib/api";
 import { useLanguage } from "@/lib/language";
+import DynamicSEO from '@/components/DynamicSEO';
 import { usePageContent } from "@/lib/usePageContent";
 
 interface AuthUser {
@@ -20,7 +21,7 @@ interface AuthResponse {
 export default function DashboardPage() {
   const router = useRouter();
   const { t, lang } = useLanguage();
-  const { getField } = usePageContent("dashboard-page");
+  const { getField, seo, } = usePageContent("dashboard-page");
   const [status, setStatus] = useState<"loading" | "user">("loading");
 
   useEffect(() => {
@@ -48,6 +49,7 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 overflow-x-hidden pt-20">
+      <DynamicSEO seo={seo} />
       <Header />
       <main className="mx-auto max-w-5xl px-4 py-16">
         <div className="text-center mb-12">
