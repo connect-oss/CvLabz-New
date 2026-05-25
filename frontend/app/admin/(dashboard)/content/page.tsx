@@ -15,6 +15,7 @@ import {
   Loader2,
   ArrowRight,
   AlertCircle,
+  Lock,
 } from "lucide-react";
 import { api } from "@/lib/api";
 
@@ -40,6 +41,15 @@ const PAGE_ICONS: Record<string, React.ComponentType<{ className?: string }>> = 
   contact: Phone,
   faqs: HelpCircle,
   global: Globe,
+  login: Lock,
+  "forgot-password": Lock,
+  "admin-login": Lock,
+  tos: FileText,
+  "privacy-policy": FileText,
+  "cookie-policy": FileText,
+  "blogs-page": FileText,
+  "dashboard-page": Home,
+  "not-found": HelpCircle,
 };
 
 const SECTIONS = [
@@ -50,6 +60,18 @@ const SECTIONS = [
   {
     title: "Product Pages",
     keys: ["cv-builder", "cv-matching", "linkedin-analyzer", "motivation-letter"],
+  },
+  {
+    title: "Auth Pages",
+    keys: ["login", "forgot-password", "admin-login"],
+  },
+  {
+    title: "Legal Pages",
+    keys: ["tos", "privacy-policy", "cookie-policy"],
+  },
+  {
+    title: "Other Pages",
+    keys: ["blogs-page", "dashboard-page", "not-found"],
   },
   {
     title: "Global Elements",
