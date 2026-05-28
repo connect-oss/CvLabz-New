@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useLanguage } from "@/lib/language";
 
 interface SEOData {
@@ -15,50 +16,78 @@ interface SEOData {
 
 interface DynamicSEOProps {
   seo?: SEOData | null;
-  fallbackTitle?: string;
-  fallbackDescription?: string;
 }
 
-export default function DynamicSEO({
-  seo,
-  fallbackTitle,
-  fallbackDescription,
-}: DynamicSEOProps) {
+function setMeta(name: string, content: string, property?: boolean) {
+  const attr = property ? "property" : "name";
+  let el = document.querySelector(`meta[${attr}="${name}"]`) as HTMLMetaElement | null;
+  if (content) {
+    if (!el) {
+      el = document.createElement("meta");
+      el.setAttribute(attr, name);
+      document.head.appendChild(el);
+    }
+    el.content = content;
+  } else if (el) {
+    el.remove();
+  }
+}
+
+function setLink(rel: string, href: string) {
+  let el = document.querySelector(`link[rel="${rel}"]`) as HTMLLinkElement | null;
+  if (href) {
+    if (!el) {
+      el = document.createElement("link");
+      el.rel = rel;
+      document.head.appendChild(el);
+    }
+    el.href = href;
+  }
+}
+
+export default function DynamicSEO({ seo }: DynamicSEOProps) {
   const { lang } = useLanguage();
 
-  if (!seo) return null;
+  useEffect(() => {
+    if (!seo) return;
 
-  // Only use CMS values if they're actually filled in (not empty strings)
-  const cmsTitle =
-    (lang === "nl" && seo.metaTitle_nl?.trim() ? seo.metaTitle_nl : null) ||
-    (seo.metaTitle_en?.trim() ? seo.metaTitle_en : null);
-  const cmsDescription =
-    (lang === "nl" && seo.metaDescription_nl?.trim() ? seo.metaDescription_nl : null) ||
-    (seo.metaDescription_en?.trim() ? seo.metaDescription_en : null);
-  const cmsKeywords =
-    (lang === "nl" && seo.metaKeywords_nl?.trim() ? seo.metaKeywords_nl : null) ||
-    (seo.metaKeywords_en?.trim() ? seo.metaKeywords_en : null);
-  const canonical = seo.canonical?.trim() || null;
-  const ogImage = seo.ogImage?.trim() || null;
+    const title =
+      (lang === "nl" && seo.metaTitle_nl?.trim() ? seo.metaTitle_nl : null) ||
+      (seo.metaTitle_en?.trim() ? seo.metaTitle_en : null);
 
-  // Don't render anything if no CMS SEO data is filled — let layout.tsx defaults work
-  const title = cmsTitle || fallbackTitle;
-  const description = cmsDescription || fallbackDescription;
+    const description =
+      (lang === "nl" && seo.metaDescription_nl?.trim() ? seo.metaDescription_nl : null) ||
+      (seo.metaDescription_en?.trim() ? seo.metaDescription_en : null);
 
-  const hasAnything = title || description || cmsKeywords || canonical || ogImage;
-  if (!hasAnything) return null;
+    const keywords =
+      (lang === "nl" && seo.metaKeywords_nl?.trim() ? seo.metaKeywords_nl : null) ||
+      (seo.metaKeywords_en?.trim() ? seo.metaKeywords_en : null);
 
-  return (
-    <>
-      {title && <title>{title} | CV Labz</title>}
-      {description && <meta name="description" content={description} />}
-      {cmsKeywords && <meta name="keywords" content={cmsKeywords} />}
-      {canonical && <link rel="canonical" href={canonical} />}
-      {title && <meta property="og:title" content={title} />}
-      {description && <meta property="og:description" content={description} />}
-      {ogImage && <meta property="og:image" content={ogImage} />}
-      {title && <meta name="twitter:title" content={title} />}
-      {description && <meta name="twitter:description" content={description} />}
-    </>
-  );
+    const canonical = seo.canonical?.trim() || null;
+    const ogImage = seo.ogImage?.trim() || null;
+
+    if (title) {
+      document.title = `${title} | CV Labz`;
+    }
+    if (description) {
+      setMeta("description", description);
+      setMeta("og:description", description, true);
+      setMeta("twitter:description", description);
+    }
+    if (title) {
+      setMeta("og:title", title, true);
+      setMeta("twitter:title", title);
+    }
+    if (keywords) {
+      setMeta("keywords", keywords);
+    }
+    if (canonical) {
+      setLink("canonical", canonical);
+    }
+    if (ogImage) {
+      setMeta("og:image", ogImage, true);
+    }
+  }, [seo, lang]);
+
+  return null;
 }
